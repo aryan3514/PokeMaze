@@ -5,8 +5,8 @@
 class Pikachu{
 
     public:
-    int fwidth = 20;
-    int fheight = 20;
+    int width = 20;
+    int height = 20;
 
     SDL_Point fposition;
     Unit* curunit;

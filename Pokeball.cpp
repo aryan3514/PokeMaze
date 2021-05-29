@@ -8,14 +8,20 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
 
     if (Unitx != NULL)
     {
-        fposition.x = Unitx->GetPos.x * fwidth;
-        fposition.y = Unitx->GetPos.x * fheight;
+        fposition.x = Unitx->GetPos.x * width;
+        fposition.y = Unitx->GetPos.x * height;
     }
     else
     {
         fposition.x = 0;
         fposition.y = 0;
     }
+
+    collider.w = width;
+	collider.h = height;
+
+	collider.x = position.x;
+	collider.y = position.y;
 }
 
 void Pokeball::SetUnit(Unit *unitt)

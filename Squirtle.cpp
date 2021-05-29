@@ -6,14 +6,29 @@ Squirtle::Squirtle (Unit* Unitx, Texture* texture){
     ftexture = texture;
 
     if (Unitx!=NULL){
-        fposition.x = Unitx->GetPos.x*fwidth;
-        fposition.y = Unitx->GetPos.x*fheight;
+        fposition.x = Unitx->GetPos.x*width;
+        fposition.y = Unitx->GetPos.x*height;
     }else{
         fposition.x = 0;
         fposition.y = 0;
     }
 
 }
+
+void Squirtle::SetUnit(Unit *unitt)
+{
+
+    curunit = unit;
+
+    if (curunit != NULL)
+    {
+        curunit.SetPokeball(this);
+
+        fposition.x = curunit.GetPos().x * Unit::width;
+        fposition.y = curunit.GetPos().y * Unit::height;
+    }
+}
+
 
 void Squirtle::Render(){
     ftexture->Render(fposition.x, fposition.y);

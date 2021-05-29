@@ -1,11 +1,12 @@
-#include "Wall.h"
+#include <SDL.h>
+
 class Wall{
 
-    int wwidth = 20;
-    int wheight = 20;
+    int width = 20;
+    int height = 20;
 
-    SDL_Point wposition;
-    Box* curunit;
+    SDL_Point position;
+    Unit* curunit;
     Texture* walltexture;
     SDL_Rect collider;
 

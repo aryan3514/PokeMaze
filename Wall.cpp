@@ -6,8 +6,8 @@ Wall::Wall (Unit* Unitx, Texture* texture){
     walltexture = texture;
 
     if (Unitx!=NULL){
-        wposition.x = Unitx->GetPos.x*wwidth;
-        wposition.y = Unitx->GetPos.x*wheight;
+        wposition.x = Unitx->GetPos.x*width;
+        wposition.y = Unitx->GetPos.x*height;
     }else{
         wposition.x = 0;
         wposition.y = 0;
