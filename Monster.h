@@ -3,7 +3,7 @@
 
 
 
-class Ash{
+class Monster{
 
     enum Direction {
 	UP,
@@ -13,32 +13,19 @@ class Ash{
 	STILL  
     };
 
-    int points = 0;
-
-    bool squrtle = false;
-
-    bool jpuff = false;
-
-    bool gastly  = false;
-
-    bool zoroark = false;
-
-    int speed = 4;
 
 
-    int ash_width = 50;
-    int ash_height = 50;
+    int monster_width = 50;
+    int monster_height = 50;
     
     int animcount = 4;
 
     int frames = 2;
 
-    int frame_num = 0;
-
     SDL_Point position;
     Unit* curunit;
     Unit* nextunit;
-    Texture* p_texture;
+    Texture* b_texture;
     SDL_Rect collider;
     Direction curdir;
     Direction nextdir;
@@ -62,7 +49,7 @@ class Ash{
 
     bool isMoving = false;
 
-    Ash(Unit* unitt, Texture* texture);
+    Monster(Unit* unitt, Texture* texture);
 
     void SetUnit(Unit* unitt);
 

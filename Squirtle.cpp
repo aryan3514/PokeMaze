@@ -22,7 +22,7 @@ void Squirtle::SetUnit(Unit *unitt)
 
     if (curunit != NULL)
     {
-        curunit.SetPokeball(this);
+        curunit.SetSquirtle(this);
 
         fposition.x = curunit.GetPos().x * Unit::width;
         fposition.y = curunit.GetPos().y * Unit::height;

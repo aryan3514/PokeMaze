@@ -25,6 +25,22 @@
         lMonster = monsty ;
     }
 
+    void Unit::SetSquirtle (Squirtle squirtle){
+        lSquirtle = squirtle;
+    }
+
+    void Unit::SetJigglyPuff (JigglyPuff jigg){
+        lJigglyPuff = jigg;
+    }
+
+    void Unit::SetGastly (Gastly gastly){
+        lGastly = gastly;
+    }
+
+    void Unit::SetZoroark (Zoroark zoroark){
+        lZoroark = zoroark;
+    }
+
     SDL_Point Unit::GetPos(){
         return pos;
     }
@@ -42,6 +58,22 @@
         return lPokeball;
     }
 
-    Ash Unit::GetMonster(){
+    Monster Unit::GetMonster(){
         return lMonster;
+    }
+
+    Squirtle Unit::GetSquirtle (){
+        return lSquirtle;
+    }
+
+    JigglyPuff Unit::GetJigglyPuff(){
+        return lJigglyPuff;
+    }
+
+    Gastly Unit::GetGastly (){
+        return lGastly;
+    }
+
+    Zoroark Unit::GetZoroark (){
+        return lZoroark;
     }

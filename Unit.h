@@ -4,6 +4,10 @@ class Ash;
 class Wall;
 class Pokeball;
 class Monster;
+class Squirtle;
+class JigglyPuff
+class Gastly;
+class Zoroark;
 
 class Unit{
     public :
@@ -12,6 +16,10 @@ class Unit{
     Wall* lWall = NULL;
     Pokeball* lPokeball = NULL;
     Monster* lMonster = NULL;
+    Squirtle* lSquirtle = NULL;
+    JigglyPuff* lJigglyPuff = NULL;
+    Gastly* lGastly = NULL;
+    Zoroark* lZoroark = NULL;
 
     int width = 20;
     int height = 20;
@@ -32,6 +40,14 @@ class Unit{
 
     void SetMonster (Monster monsty);
 
+    void SetSquirtle (Squirtle squirtle);
+
+    void SetJigglyPuff (JigglyPuff jigg);
+
+    void SetGastly (Gastly gastly);
+
+    void SetZoroark (Zoroark zoroark);
+
     SDL_Point GetPos();
 
     Ash GetAsh();
@@ -41,5 +57,13 @@ class Unit{
     Pokeball GetPokeball();
 
     Monster GetMonster();
+
+    Squirtle GetSquirtle();
+
+    JigglyPuff GetJigglyPuff();
+
+    Gastly GetGastly();
+
+    Zoroark GetZoroark();
 
 };
