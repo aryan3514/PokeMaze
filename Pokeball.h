@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "Unit.h"
 #include "Matrix.h"
 
 class Pokeball{
@@ -7,11 +8,11 @@ class Pokeball{
     int width = 20;
     int height = 20;
 
-    SDL_Point fposition;
+    SDL_Point position;
     Unit* curunit;
     Texture* ftexture;
 
-    SDL_Rect* collider;
+    SDL_Rect collider;
 
     Pokeball (Unit* Unitx, Texture* texture);
 
@@ -21,7 +22,7 @@ class Pokeball{
 
     SDL_Rect GetCollider();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 };

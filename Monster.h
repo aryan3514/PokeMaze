@@ -1,11 +1,13 @@
+#pragma once
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <Unit.h>
+#include "Unit.h"
 
 
 
 class Monster{
 
-    enum Direction {
+    /*enum Direction {
 	UP,
 	DOWN,
 	LEFT,
@@ -20,7 +22,7 @@ class Monster{
     
     int animcount = 4;
 
-    int frames = 2;
+    const static int frames = 2;
 
     SDL_Point position;
     Unit* curunit;
@@ -35,7 +37,7 @@ class Monster{
     SDL_Rect LEFT_frames[frames];
     SDL_Rect RIGHT_frames[frames];
 
-    UP_frames[0] = {}; //set dimensions in the image 
+    /*UP_frames[0] = {}; //set dimensions in the image 
     UP_frames[1] = {}; //set dimensions in the image 
 
     DOWN_frames[0] = {}; //set dimensions in the image 
@@ -75,6 +77,6 @@ class Monster{
 
     Unit GetNextUnit();
 
-    SDL_Rect GetPos();
+    SDL_Rect GetPos();*/
 
 };

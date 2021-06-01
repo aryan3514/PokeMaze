@@ -1,18 +1,22 @@
+#pragma once
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <Unit.h>
+#include "Unit.h"
+#include "Texture.h"
+#include "Matrix.h"
 
-
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    STILL
+};
 
 class Ash{
 
-    enum Direction {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	STILL  
-    };
-
+    
+    Matrix* unitm;
     int points = 0;
 
     bool squrtle = false;
@@ -31,7 +35,7 @@ class Ash{
     
     int animcount = 4;
 
-    int frames = 2;
+
 
     int frame_num = 0;
 
@@ -43,22 +47,12 @@ class Ash{
     Direction curdir;
     Direction nextdir;
 
-    SDL_Rect UP_frames[frames];
-    SDL_Rect DOWN_frames[frames];
-    SDL_Rect LEFT_frames[frames];
-    SDL_Rect RIGHT_frames[frames];
+    SDL_Rect UP_frames[2];
+    SDL_Rect DOWN_frames[2];
+    SDL_Rect LEFT_frames[2];
+    SDL_Rect RIGHT_frames[2];
 
-    UP_frames[0] = {}; //set dimensions in the image 
-    UP_frames[1] = {}; //set dimensions in the image 
-
-    DOWN_frames[0] = {}; //set dimensions in the image 
-    DOWN_frames[1] = {}; //set dimensions in the image 
-
-    LEFT_frames[0] = {}; //set dimensions in the image 
-    LEFT_frames[1] = {}; //set dimensions in the image 
-
-    RIGHT_frames[0] = {}; //set dimensions in the image 
-    RIGHT_frames[1] = {}; //set dimensions in the image
+    void SetDimensions();
 
     bool isMoving = false;
 
@@ -71,6 +65,8 @@ class Ash{
     void Render();
 
     bool CheckCollision(SDL_Rect other_collider);
+    
+    bool CheckCollisionForTwo(SDL_Rect first_collider, SDL_Rect second_collider);
 
     void HandleKeys(SDL_Event* event);
 
@@ -84,10 +80,10 @@ class Ash{
 
     Direction GetNextDirection();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    Unit GetNextUnit();
+    Unit* GetNextUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 
 };

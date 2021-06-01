@@ -1,4 +1,6 @@
+#pragma once
 #include "Texture.h"
+#include "Unit.h"
 #include "Matrix.h"
 
 class JigglyPuff{

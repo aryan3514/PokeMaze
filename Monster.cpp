@@ -1,7 +1,7 @@
 #include "Monster.h"
 #include "Wall.h"
 
-Monster::Monster(Unit *Unitx, Texture *texture)
+/*Monster::Monster(Unit *Unitx, Texture *texture)
 {
 
     curunit = Unitx;
@@ -117,4 +117,4 @@ Unit Monster::GetNextUnit(){
 
 SDL_Rect Monster::GetPos(){
     return position;
-}
+}*/

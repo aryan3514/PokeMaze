@@ -8,13 +8,13 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
 
     if (Unitx != NULL)
     {
-        fposition.x = Unitx->GetPos.x * width;
-        fposition.y = Unitx->GetPos.x * height;
+        position.x = Unitx->GetPos().x * width;
+        position.y = Unitx->GetPos().x * height;
     }
     else
     {
-        fposition.x = 0;
-        fposition.y = 0;
+        position.x = 0;
+        position.y = 0;
     }
 
     collider.w = width;
@@ -27,14 +27,14 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
 void Pokeball::SetUnit(Unit *unitt)
 {
 
-    curunit = unit;
+    curunit = unitt;
 
     if (curunit != NULL)
     {
-        curunit.SetPokeball(this);
+        curunit->SetPokeball(this);
 
-        fposition.x = curunit.GetPos().x * Unit::width;
-        fposition.y = curunit.GetPos().y * Unit::height;
+        position.x = curunit->GetPos().x * Unit::width;
+        position.y = curunit->GetPos().y * Unit::height;
     }
 }
 
@@ -43,17 +43,17 @@ SDL_Rect Pokeball::GetCollider()
     return collider;
 }
 
-Unit Pokeball::GetCurUnit()
+Unit* Pokeball::GetCurUnit()
 {
     return curunit;
 }
 
 void Pokeball::Render()
 {
-    ftexture->Render(fposition.x, fposition.y);
+    ftexture->Render(position.x, position.y);
 }
 
 SDL_Point Pokeball::GetPos()
 {
-    return fposition;
+    return position;
 }

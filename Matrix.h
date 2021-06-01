@@ -6,13 +6,13 @@ class Matrix {
 
 public:
 
-    static int width;
-    static int height;
+    int width;
+    int height;
 
-    static Unit Area;
+    Unit** Area;
 
     Matrix(int h, int w);
 
-    Unit* Matrix::GetUnitFromMatrix(int x, int y)
+    Unit* GetUnitFromMatrix(int x, int y);
 
 };

@@ -19,5 +19,5 @@ Matrix::Matrix(int h, int w) {
 }
 
 Unit* Matrix::GetUnitFromMatrix(int x, int y) {
-    return Area[x][y];
+    return (&Area[x][y]);
 }

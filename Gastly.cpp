@@ -1,3 +1,5 @@
+#pragma once
+#include "Gastly.h"
 #include "Wall.h"
 
 Gastly::Gastly (Unit* Unitx, Texture* texture){
@@ -6,8 +8,8 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
     ftexture = texture;
 
     if (Unitx!=NULL){
-        fposition.x = Unitx->GetPos.x*fwidth;
-        fposition.y = Unitx->GetPos.x*fheight;
+        fposition.x = Unitx->GetPos().x*width;
+        fposition.y = Unitx->GetPos().x*height;
     }else{
         fposition.x = 0;
         fposition.y = 0;
@@ -28,10 +30,7 @@ SDL_Rect Gastly::GetCollider(){
     return collider;
 }
 
-Unit Gastly::GetCurUnit(){
+Unit* Gastly::GetCurUnit(){
     return curunit;
 }
 
-SDL_Rect Gastly::GetPos(){
-    return fposition;
-}

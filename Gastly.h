@@ -1,10 +1,12 @@
+#pragma once
 #include "Texture.h"
+#include "Unit.h"
 #include "Matrix.h"
 
 
-class Gastly{
+class Gastly {
 
-    public:
+public:
     int width = 20;
     int height = 20;
 
@@ -13,16 +15,16 @@ class Gastly{
     Texture* ftexture;
     SDL_Rect collider;
 
-    Gastly (Unit* Unitx, Texture* texture);
+    Gastly(Unit* Unitx, Texture* texture);
 
     void SetUnit(Unit* unitt);
-    
+
     void Render();
 
     SDL_Rect GetCollider();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 
-}
+};
