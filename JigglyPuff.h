@@ -3,7 +3,7 @@
 #include "Unit.h"
 #include "Matrix.h"
 
-class JigglyPuff{
+class JigglyPuff : public Element {
 
     public:
     int width = 20;

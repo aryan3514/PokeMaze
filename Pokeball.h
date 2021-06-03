@@ -1,8 +1,9 @@
 #include "Texture.h"
 #include "Unit.h"
 #include "Matrix.h"
+#include "Element.h"
 
-class Pokeball{
+class Pokeball : public Element {
 
     public:
     int width = 20;

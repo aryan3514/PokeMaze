@@ -4,6 +4,7 @@
 #include "Unit.h"
 #include "Texture.h"
 #include "Matrix.h"
+#include "Element.h"
 
 enum Direction {
     UP,
@@ -13,7 +14,8 @@ enum Direction {
     STILL
 };
 
-class Ash{
+class Ash : public Element {
+public:
 
     
     Matrix* unitm;

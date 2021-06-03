@@ -15,6 +15,7 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
         fposition.y = 0;
     }
 
+
 }
 
 void Gastly::Render(){

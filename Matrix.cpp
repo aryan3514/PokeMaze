@@ -1,5 +1,11 @@
 #include "Matrix.h"
 
+Matrix::Matrix() {
+    Area = NULL;
+    width = 0;
+    height = 0;
+}
+
 Matrix::Matrix(int h, int w) {
 
     width = w;

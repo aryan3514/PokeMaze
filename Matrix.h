@@ -11,6 +11,8 @@ public:
 
     Unit** Area;
 
+    Matrix();
+
     Matrix(int h, int w);
 
     Unit* GetUnitFromMatrix(int x, int y);
