@@ -4,6 +4,7 @@
 
 class Element {
 public:
+	static Matrix* Element_Matrix;
 	bool toRemove;
 
 	virtual void HandleKeys(SDL_Event* event);

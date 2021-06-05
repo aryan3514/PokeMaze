@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-
 #include "Texture.h"
 #include "Unit.h"
 #include "Pokeball.h"
@@ -14,23 +13,32 @@
 #include "Matrix.h"
 #include "Zoroark.h"
 #include "Ash.h"
+#include "Summon.h"
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
-
+#include <map>
 
 using namespace std;
 
-const int WIDTH = 960;
-const int HEIGHT = 540;
+const int WIDTH = 720;
+const int HEIGHT = 720;
 
 SDL_Window* Game_Window = NULL;
 SDL_Renderer* Game_Renderer = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* Game_s = NULL;
+SDL_Texture* Tex = NULL;
 
-Matrix Game_Matrix(25, 25);
+Matrix Game_Matrix(38, 38);
+
+Summon Summoner(&Game_Matrix);
+
+vector <Element*> AllFinElements;
 
 int main(int argc, char* argv[]) {
+
+	ofstream MyFile("debhug.txt");
 	Game_Window = SDL_CreateWindow("Pokemon", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
 	if (Game_Window == NULL) {
@@ -42,12 +50,26 @@ int main(int argc, char* argv[]) {
 	if (Game_Renderer == NULL) {
 		cout << "HEY< ERROR" << endl;
 	}
+	Texture::Renderer = Game_Renderer;
+	
+	map<string, Texture*> TextureHash;
+	
 
-	gScreenSurface = SDL_GetWindowSurface(Game_Window);
-	Game_s = SDL_LoadBMP("n.bmp");
-	SDL_BlitSurface(Game_s, NULL, gScreenSurface, NULL);
-	SDL_UpdateWindowSurface(Game_Window);
-	//Texture::Renderer = Game_Renderer;
-	SDL_Delay(5000);
+	Texture* pokeball_texture = new Texture();
+	pokeball_texture->LoadImage("c.bmp");
+	Element::Element_Matrix = &Game_Matrix;
+	TextureHash.insert(pair<string, Texture*>("pokeball", pokeball_texture));
+	Summoner.SummonFromMap("map.txt", TextureHash);
+	Summoner.SummonAll(AllFinElements);
+	
+	for (int i = 0; i < AllFinElements.size(); i++) {
+		AllFinElements[i]->Refresh();
+		AllFinElements[i]->Render();
+	}
+	
+
+	//Update the surface
+	SDL_RenderPresent(Game_Renderer);
+	SDL_Delay(10000);
 	return 0;
 }

@@ -1,3 +1,4 @@
+
 #include "Pokeball.h"
 
 Pokeball::Pokeball(Unit *Unitx, Texture *texture)
@@ -9,7 +10,7 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
     if (Unitx != NULL)
     {
         position.x = Unitx->GetPos().x * width;
-        position.y = Unitx->GetPos().x * height;
+        position.y = Unitx->GetPos().y* height;
     }
     else
     {

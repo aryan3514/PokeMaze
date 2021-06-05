@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+Matrix* Element::Element_Matrix = NULL;
 
 void Element::HandleKeys(SDL_Event* event) {
 	cout << "HandleKeys was not overriden" << endl;
