@@ -9,12 +9,17 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
 
     if (Unitx!=NULL){
         fposition.x = Unitx->GetPos().x*width;
-        fposition.y = Unitx->GetPos().x*height;
+        fposition.y = Unitx->GetPos().y*height;
     }else{
         fposition.x = 0;
         fposition.y = 0;
     }
 
+    collider.w = width;
+    collider.h = height;
+
+    collider.x = fposition.x;
+    collider.y = fposition.y;
 
 }
 

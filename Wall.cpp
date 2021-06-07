@@ -6,42 +6,42 @@ Wall::Wall (Unit* Unitx, Texture* texture){
     walltexture = texture;
 
     if (Unitx!=NULL){
-        wposition.x = Unitx->GetPos.x*width;
-        wposition.y = Unitx->GetPos.x*height;
+        position.x = Unitx->GetPos().x*width;
+        position.y = Unitx->GetPos().y*height;
     }else{
-        wposition.x = 0;
-        wposition.y = 0;
+        position.x = 0;
+        position.y = 0;
     }
 
 }
 
 void Wall::SetUnit(Unit* unitt){
 
-    curunit = unit;
+    curunit = unitt;
 
     if (curunit!=NULL){
-        curunit.SetWall(this);
+        curunit->SetWall(this);
 
-        wposition.x = curunit.GetPos().x * Unit::width;
-        wposition.y = curunit.GetPos().y * Unit::height;
+        position.x = curunit->GetPos().x * Unit::width;
+        position.y = curunit->GetPos().y * Unit::height;
     }
 }
 
 void Wall::Render()
 {
-	wallTexture->Render(wposition.x, wposition.y);
+	walltexture->Render(position.x, position.y);
 }
 
 SDL_Rect Wall::GetCollider(){
     return collider;
 }
 
-Unit Wall::GetCurUnit(){
+Unit* Wall::GetCurUnit(){
     return curunit;
 }
 
-SDL_Rect Wall::GetPos(){
-    return wposition;
+SDL_Point Wall::GetPos(){
+    return position;
 }
 
 

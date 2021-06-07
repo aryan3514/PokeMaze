@@ -1,7 +1,11 @@
+#pragma once
 #include <SDL.h>
+#include "Texture.h"
+#include "Unit.h"
+#include "Element.h"
 
-class Wall{
-
+class Wall : public Element {
+public:
     int width = 20;
     int height = 20;
 
@@ -10,14 +14,16 @@ class Wall{
     Texture* walltexture;
     SDL_Rect collider;
 
+    Wall(Unit* Unitx, Texture* texture);
+
     void SetUnit(Unit* unitt);
 
     void Render();
 
     SDL_Rect GetCollider();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 
-}
+};

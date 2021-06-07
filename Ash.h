@@ -32,8 +32,8 @@ public:
     int speed = 4;
 
 
-    int ash_width = 50;
-    int ash_height = 50;
+    int ash_width = 20;
+    int ash_height = 20;
     
     int animcount = 4;
 

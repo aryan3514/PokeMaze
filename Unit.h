@@ -1,11 +1,14 @@
+#pragma once
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
+
 
 class Ash;
 class Wall;
 class Pokeball;
 class Monster;
 class Squirtle;
-class JigglyPuff
+class JigglyPuff;
 class Gastly;
 class Zoroark;
 
@@ -21,8 +24,8 @@ class Unit{
     Gastly* lGastly = NULL;
     Zoroark* lZoroark = NULL;
 
-    int width = 20;
-    int height = 20;
+    const static int width = 30;
+    const static int height = 30;
     
     SDL_Point pos;
 
@@ -32,38 +35,38 @@ class Unit{
 
     void SetPos(int a, int b);
 
-    void SetAsh (Ash Ashh);
+    void SetAsh (Ash* Ashh);
 
-    void SetPokeball (Pokeball ball);
+    void SetPokeball (Pokeball* ball);
 
-    void SetWall (Wall wol);
+    void SetWall (Wall* wol);
 
-    void SetMonster (Monster monsty);
+    void SetMonster (Monster* monsty);
 
-    void SetSquirtle (Squirtle squirtle);
+    void SetSquirtle (Squirtle* squirtle);
 
-    void SetJigglyPuff (JigglyPuff jigg);
+    void SetJigglyPuff (JigglyPuff* jigg);
 
-    void SetGastly (Gastly gastly);
+    void SetGastly (Gastly* gastly);
 
-    void SetZoroark (Zoroark zoroark);
+    void SetZoroark (Zoroark* zoroark);
 
     SDL_Point GetPos();
 
-    Ash GetAsh();
+    Ash* GetAsh();
 
-    Wall GetWall();
+    Wall* GetWall();
 
-    Pokeball GetPokeball();
+    Pokeball* GetPokeball();
 
-    Monster GetMonster();
+    Monster* GetMonster();
 
-    Squirtle GetSquirtle();
+    Squirtle* GetSquirtle();
 
-    JigglyPuff GetJigglyPuff();
+    JigglyPuff* GetJigglyPuff();
 
-    Gastly GetGastly();
+    Gastly* GetGastly();
 
-    Zoroark GetZoroark();
+    Zoroark* GetZoroark();
 
 };

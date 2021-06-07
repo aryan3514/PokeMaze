@@ -9,8 +9,8 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
 
     if (Unitx != NULL)
     {
-        position.x = Unitx->GetPos().x * width;
-        position.y = Unitx->GetPos().y* height;
+        position.x = Unitx->GetPos().x * width ;
+        position.y = Unitx->GetPos().y* height ;
     }
     else
     {

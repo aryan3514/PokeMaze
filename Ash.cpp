@@ -16,18 +16,6 @@ Ash::Ash(Unit* unitt, Texture* texture)
     collider.w = ash_width;
     collider.h = ash_height;
 
-    UP_frames[0] = {}; //set dimensions in the image 
-    UP_frames[1] = {}; //set dimensions in the image 
-
-    DOWN_frames[0] = {}; //set dimensions in the image 
-    DOWN_frames[1] = {}; //set dimensions in the image 
-
-    LEFT_frames[0] = {}; //set dimensions in the image 
-    LEFT_frames[1] = {}; //set dimensions in the image 
-
-    RIGHT_frames[0] = {}; //set dimensions in the image 
-    RIGHT_frames[1] = {}; //set dimensions in the image
-
     if (unitt != NULL)
     {
         position.x = unitt->GetPos().x * ash_width;
@@ -38,10 +26,6 @@ Ash::Ash(Unit* unitt, Texture* texture)
         position.x = 0;
         position.y = 0;
     }
-
-    
-
-
 
     curdir = RIGHT;
     nextdir = RIGHT;
@@ -117,7 +101,8 @@ bool Ash::MoveOneUnit(Direction dir)
 
 void Ash::Render()
 {
-    if (curdir==UP){
+    p_texture->Render(position.x, position.y);
+    /*if (curdir==UP){
         p_texture->Render(position.x, position.y, &UP_frames[frame_num]);
     }
     else if(curdir==DOWN){
@@ -128,7 +113,7 @@ void Ash::Render()
     }
     else if(curdir==LEFT){
         p_texture->Render(position.x, position.y, &RIGHT_frames[frame_num]);
-    }
+    }*/
 
 }
 

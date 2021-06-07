@@ -1,10 +1,14 @@
+
+#pragma once
 #include "Texture.h"
+#include "Unit.h"
 #include "Matrix.h"
+#include "Element.h"
 
 
-class Squirtle{
+class Squirtle : public Element {
 
-    public:
+public:
     int width = 20;
     int height = 20;
 
@@ -13,16 +17,16 @@ class Squirtle{
     Texture* ftexture;
     SDL_Rect collider;
 
-    Squirtle (Unit* Unitx, Texture* texture);
+    Squirtle(Unit* Unitx, Texture* texture);
 
     void SetUnit(Unit* unitt);
-    
+
     void Render();
 
     SDL_Rect GetCollider();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 
-}
+};

@@ -1,10 +1,13 @@
+#pragma once
 #include "Texture.h"
+#include "Unit.h"
 #include "Matrix.h"
+#include "Element.h"
 
 
-class Zoroark{
+class Zoroark : public Element {
 
-    public:
+public:
     int width = 20;
     int height = 20;
 
@@ -13,16 +16,16 @@ class Zoroark{
     Texture* ftexture;
     SDL_Rect collider;
 
-    Zoroark (Unit* Unitx, Texture* texture);
+    Zoroark(Unit* Unitx, Texture* texture);
 
     void SetUnit(Unit* unitt);
-    
+
     void Render();
 
     SDL_Rect GetCollider();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    SDL_Rect GetPos();
+    SDL_Point GetPos();
 
-}
+};

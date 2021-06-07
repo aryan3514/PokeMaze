@@ -1,5 +1,9 @@
 #include "Unit.h"
 
+    Unit::Unit() {
+        pos = { 0,0 };
+    }
+
     Unit::Unit(int a, int b){
         pos = {a,b};
     }
@@ -9,35 +13,35 @@
         pos.y = b;
     }
 
-    void Unit::SetAsh (Ash Ashh){
+    void Unit::SetAsh (Ash* Ashh){
         lAsh = Ashh;
     }
 
-    void Unit::SetPokeball (Pokeball ball){
+    void Unit::SetPokeball (Pokeball* ball){
         lPokeball =  ball;
     }
 
-    void Unit::SetWall (Wall wol){
+    void Unit::SetWall (Wall* wol){
         lWall = wol;
     }
 
-    void Unit::SetMonster (Monster monsty){
+    void Unit::SetMonster (Monster* monsty){
         lMonster = monsty ;
     }
 
-    void Unit::SetSquirtle (Squirtle squirtle){
+    void Unit::SetSquirtle (Squirtle* squirtle){
         lSquirtle = squirtle;
     }
 
-    void Unit::SetJigglyPuff (JigglyPuff jigg){
+    void Unit::SetJigglyPuff (JigglyPuff* jigg){
         lJigglyPuff = jigg;
     }
 
-    void Unit::SetGastly (Gastly gastly){
+    void Unit::SetGastly (Gastly* gastly){
         lGastly = gastly;
     }
 
-    void Unit::SetZoroark (Zoroark zoroark){
+    void Unit::SetZoroark (Zoroark* zoroark){
         lZoroark = zoroark;
     }
 
@@ -45,35 +49,35 @@
         return pos;
     }
 
-    Ash Unit::GetAsh(){
+    Ash* Unit::GetAsh(){
         return lAsh;
     }
 
 
-    Wall Unit::GetWall(){
+    Wall* Unit::GetWall(){
         return lWall;
     }
 
-    Pokeball Unit::GetPokeball(){
+    Pokeball* Unit::GetPokeball(){
         return lPokeball;
     }
 
-    Monster Unit::GetMonster(){
+    Monster* Unit::GetMonster(){
         return lMonster;
     }
 
-    Squirtle Unit::GetSquirtle (){
+    Squirtle* Unit::GetSquirtle (){
         return lSquirtle;
     }
 
-    JigglyPuff Unit::GetJigglyPuff(){
+    JigglyPuff* Unit::GetJigglyPuff(){
         return lJigglyPuff;
     }
 
-    Gastly Unit::GetGastly (){
+    Gastly* Unit::GetGastly (){
         return lGastly;
     }
 
-    Zoroark Unit::GetZoroark (){
+    Zoroark* Unit::GetZoroark (){
         return lZoroark;
     }
