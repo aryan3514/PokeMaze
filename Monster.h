@@ -1,53 +1,59 @@
 #pragma once
 #define SDL_MAIN_HANDLED
+#include "Ash.h"
 #include <SDL.h>
 #include "Unit.h"
+#include "Texture.h"
+#include "Matrix.h"
+#include "Element.h"
+#include "Pokeball.h"
+#include "Squirtle.h"
+#include "JigglyPuff.h"
+#include "Zoroark.h"
+#include "Gastly.h"
+#include "Wall.h"
+
+class Monster : public Element {
+public:
 
 
 
-class Monster{
+    static int points;
 
-    /*enum Direction {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	STILL  
-    };
+    bool squrtle = false;
+
+    bool jpuff = false;
+
+    bool gastly = false;
+
+    bool zoroark = false;
+
+    int speed = 4;
 
 
+    int ash_width = 20;
+    int ash_height = 20;
 
-    int monster_width = 50;
-    int monster_height = 50;
-    
     int animcount = 4;
 
-    const static int frames = 2;
+
+
+    int frame_num = 0;
 
     SDL_Point position;
     Unit* curunit;
     Unit* nextunit;
-    Texture* b_texture;
+    Texture* p_texture;
     SDL_Rect collider;
     Direction curdir;
     Direction nextdir;
 
-    SDL_Rect UP_frames[frames];
-    SDL_Rect DOWN_frames[frames];
-    SDL_Rect LEFT_frames[frames];
-    SDL_Rect RIGHT_frames[frames];
+    SDL_Rect UP_frames[2];
+    SDL_Rect DOWN_frames[2];
+    SDL_Rect LEFT_frames[2];
+    SDL_Rect RIGHT_frames[2];
 
-    /*UP_frames[0] = {}; //set dimensions in the image 
-    UP_frames[1] = {}; //set dimensions in the image 
-
-    DOWN_frames[0] = {}; //set dimensions in the image 
-    DOWN_frames[1] = {}; //set dimensions in the image 
-
-    LEFT_frames[0] = {}; //set dimensions in the image 
-    LEFT_frames[1] = {}; //set dimensions in the image 
-
-    RIGHT_frames[0] = {}; //set dimensions in the image 
-    RIGHT_frames[1] = {}; //set dimensions in the image
+    void SetDimensions();
 
     bool isMoving = false;
 
@@ -61,6 +67,8 @@ class Monster{
 
     bool CheckCollision(SDL_Rect other_collider);
 
+    bool CheckCollisionForTwo(SDL_Rect first_collider, SDL_Rect second_collider);
+
     void HandleKeys(SDL_Event* event);
 
     bool MoveOneUnit(Direction dir);
@@ -73,10 +81,10 @@ class Monster{
 
     Direction GetNextDirection();
 
-    Unit GetCurUnit();
+    Unit* GetCurUnit();
 
-    Unit GetNextUnit();
+    Unit* GetNextUnit();
 
-    SDL_Rect GetPos();*/
+    SDL_Point GetPos();
 
 };

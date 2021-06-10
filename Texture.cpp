@@ -68,6 +68,8 @@ void Texture::LoadText(TTF_Font* FONT, SDL_Color colour, string sentance) {
 			height = surface->h;
 		}
 	}
+
+	SDL_FreeSurface(surface);
 }
 
 int Texture::GHeight(){

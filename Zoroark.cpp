@@ -7,8 +7,10 @@ Zoroark::Zoroark (Unit* Unitx, Texture* texture){
     ftexture = texture;
 
     if (Unitx!=NULL){
-        fposition.x = Unitx->GetPos().x*width;
-        fposition.y = Unitx->GetPos().y*height;
+
+        curunit->SetZoroark(this);
+        fposition.x = Unitx->GetPos().x*width + width_offset;
+        fposition.y = Unitx->GetPos().y*height + height_offset;
     }else{
         fposition.x = 0;
         fposition.y = 0;
@@ -27,6 +29,11 @@ SDL_Point Zoroark::GetPos(){
 
 SDL_Rect Zoroark::GetCollider(){
     return collider;
+}
+
+void Zoroark::Remove() {
+    Element::Remove();
+    curunit->SetZoroark(NULL);
 }
 
 Unit* Zoroark::GetCurUnit(){

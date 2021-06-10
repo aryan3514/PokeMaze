@@ -20,6 +20,8 @@ public:
 
     void SetUnit(Unit* unitt);
 
+    void Remove();
+
     void Render();
 
     SDL_Rect GetCollider();

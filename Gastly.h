@@ -22,6 +22,8 @@ public:
 
     void Render();
 
+    void Remove();
+
     SDL_Rect GetCollider();
 
     Unit* GetCurUnit();

@@ -5,7 +5,7 @@
     }
 
     Unit::Unit(int a, int b){
-        pos = {a,b};
+        pos = {a,b };
     }
 
     void Unit::SetPos(int a, int b){

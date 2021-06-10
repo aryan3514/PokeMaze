@@ -9,8 +9,9 @@ Squirtle::Squirtle (Unit* Unitx, Texture* texture){
     collider.h = height;
 
     if (Unitx!=NULL){
-        fposition.x = Unitx->GetPos().x*width;
-        fposition.y = Unitx->GetPos().y*height;
+        curunit->SetSquirtle(this);
+        fposition.x = Unitx->GetPos().x*width + width_offset;
+        fposition.y = Unitx->GetPos().y*height + height_offset;
     }else{
         fposition.x = 0;
         fposition.y = 0;
@@ -27,14 +28,19 @@ void Squirtle::SetUnit(Unit *unitt)
     {
         curunit->SetSquirtle(this);
 
-        fposition.x = curunit->GetPos().x * Unit::width;
-        fposition.y = curunit->GetPos().y * Unit::height;
+        fposition.x = curunit->GetPos().x * Unit::width + width_offset;
+        fposition.y = curunit->GetPos().y * Unit::height + height_offset;
     }
 }
 
 
 void Squirtle::Render(){
     ftexture->Render(fposition.x, fposition.y);
+}
+
+void Squirtle::Remove() {
+    Element::Remove();
+    curunit->SetSquirtle(NULL);
 }
 
 SDL_Point Squirtle::GetPos(){

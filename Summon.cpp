@@ -31,8 +31,8 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 			else if (it[i] == 'a') {
 				curel = new Ash(uni, AllTextures.find("ash")->second);
 			}
-			else if (it[i] == 'r') {
-				//curel = new Monster(uni, AllTextures.find("monster")->second);
+			else if (it[i] == 'm') {
+				curel = new Monster(uni, AllTextures.find("monster")->second);
 			}
 			else if (it[i] == 'p') {
 				curel = new Pokeball(uni, AllTextures.find("pokeball")->second);
@@ -45,6 +45,9 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 			}
 			else if (it[i] == 'z') {
 				curel = new Zoroark(uni, AllTextures.find("zoroark")->second);
+			}
+			else if (it[i] == 'j') {
+				curel = new JigglyPuff(uni, AllTextures.find("jigglypuff")->second);
 			}
 
 			if (curel != NULL) {
@@ -61,5 +64,6 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 }
 
 void Summon::SummonAll(vector <Element*> &AllGameElements){
+	
 	AllGameElements = AllElements;
 }

@@ -25,6 +25,8 @@ public:
 
     SDL_Rect GetCollider();
 
+    void Remove();
+
     Unit* GetCurUnit();
 
     SDL_Point GetPos();

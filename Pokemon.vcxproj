@@ -64,8 +64,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\91887\Desktop\COP Final\SDL2_image-2.0.1\include;C:\Users\91887\Desktop\COP Final\SDL2_ttf-2.0.14\include;C:\Users\91887\Desktop\COP Final;C:\Users\91887\Desktop\COP Final\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\91887\Desktop\COP Final\SDL2_image-2.0.1\lib\x86;C:\Users\91887\Desktop\COP Final\SDL2_ttf-2.0.14\lib\x86;C:\Users\91887\Desktop\COP Final\Debug;C:\Users\91887\Desktop\COP Final\SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\91887\Desktop\COP Final\SDL\include;C:\Users\91887\Desktop\COP Final\SDL2_mixer-2.0.4\include;C:\Users\91887\Desktop\COP Final\SDL2_image-2.0.1\include;C:\Users\91887\Desktop\COP Final\SDL2_ttf-2.0.14\include;C:\Users\91887\Desktop\COP Final;C:\Users\91887\Desktop\COP Final\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\91887\Desktop\COP Final\SDL\lib\x86;C:\Users\91887\Desktop\COP Final\SDL2_mixer-2.0.4\lib\x86;C:\Users\91887\Desktop\COP Final\SDL2_image-2.0.1\lib\x86;C:\Users\91887\Desktop\COP Final\SDL2_ttf-2.0.14\lib\x86;C:\Users\91887\Desktop\COP Final\Debug;C:\Users\91887\Desktop\COP Final\SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -83,7 +83,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\91887\Desktop\COP Final\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,10 +105,11 @@
     <ClCompile Include="Ash.cpp" />
     <ClCompile Include="Element.cpp" />
     <ClCompile Include="Gastly.cpp" />
+    <ClCompile Include="JigglyPuff.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Pokeball.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Squirtle.cpp" />
     <ClCompile Include="Summon.cpp" />
     <ClCompile Include="Texture.cpp" />

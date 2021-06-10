@@ -7,8 +7,8 @@
 class Pokeball : public Element {
 
     public:
-    int width = 20;
-    int height = 20;
+    int width = 30;
+    int height = 30;
 
     SDL_Point position;
     Unit* curunit;
@@ -23,6 +23,8 @@ class Pokeball : public Element {
     void SetUnit(Unit* unitt);
 
     SDL_Rect GetCollider();
+
+    void Remove();
 
     Unit* GetCurUnit();
 

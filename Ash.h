@@ -5,6 +5,13 @@
 #include "Texture.h"
 #include "Matrix.h"
 #include "Element.h"
+#include "Pokeball.h"
+#include "Squirtle.h"
+#include "JigglyPuff.h"
+#include "Zoroark.h"
+#include "Gastly.h"
+#include "Wall.h"
+#include <SDL_mixer.h>
 
 enum Direction {
     UP,
@@ -17,9 +24,13 @@ enum Direction {
 class Ash : public Element {
 public:
 
+    Mix_Chunk* ankita = NULL;
+    Mix_Chunk* SquirtleSound = NULL;
+    Mix_Chunk* JigglyPuffSound = NULL;
+    Mix_Chunk* GastlySound = NULL;
+    Mix_Chunk* ZoroarkSound = NULL;
     
-    Matrix* unitm;
-    int points = 0;
+    static int points;
 
     bool squrtle = false;
 
@@ -32,8 +43,8 @@ public:
     int speed = 4;
 
 
-    int ash_width = 20;
-    int ash_height = 20;
+    int ash_width = 30;
+    int ash_height = 30;
     
     int animcount = 4;
 
@@ -59,6 +70,8 @@ public:
     bool isMoving = false;
 
     Ash(Unit* unitt, Texture* texture);
+
+    bool LoadSound();
 
     void SetUnit(Unit* unitt);
 

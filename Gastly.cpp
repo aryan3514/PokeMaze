@@ -8,8 +8,10 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
     ftexture = texture;
 
     if (Unitx!=NULL){
-        fposition.x = Unitx->GetPos().x*width;
-        fposition.y = Unitx->GetPos().y*height;
+
+        curunit->SetGastly(this);
+        fposition.x = Unitx->GetPos().x*width + width_offset;
+        fposition.y = Unitx->GetPos().y*height + height_offset;
     }else{
         fposition.x = 0;
         fposition.y = 0;
@@ -29,6 +31,11 @@ void Gastly::Render(){
 
 SDL_Point Gastly::GetPos(){
     return fposition;
+}
+
+void Gastly::Remove() {
+    Element::Remove();
+    curunit->SetGastly(NULL);
 }
 
 

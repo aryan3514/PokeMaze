@@ -6,8 +6,10 @@ Wall::Wall (Unit* Unitx, Texture* texture){
     walltexture = texture;
 
     if (Unitx!=NULL){
-        position.x = Unitx->GetPos().x*width;
-        position.y = Unitx->GetPos().y*height;
+
+        curunit->SetWall(this);
+        position.x = Unitx->GetPos().x*width + width_offset;
+        position.y = Unitx->GetPos().y*height + height_offset;
     }else{
         position.x = 0;
         position.y = 0;
@@ -22,8 +24,8 @@ void Wall::SetUnit(Unit* unitt){
     if (curunit!=NULL){
         curunit->SetWall(this);
 
-        position.x = curunit->GetPos().x * Unit::width;
-        position.y = curunit->GetPos().y * Unit::height;
+        position.x = curunit->GetPos().x * Unit::width + width_offset;
+        position.y = curunit->GetPos().y * Unit::height + height_offset;
     }
 }
 

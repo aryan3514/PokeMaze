@@ -1,84 +1,105 @@
+#pragma once
 #include "Monster.h"
 #include "Wall.h"
+#include "Matrix.h"
+#include <string>
+#include "Ash.h"
+#include <algorithm>
+#include <fstream>
+using namespace std;
 
-/*Monster::Monster(Unit *Unitx, Texture *texture)
+
+int Monster::points = 0;
+
+Monster::Monster(Unit* unitt, Texture* texture)
 {
 
-    curunit = Unitx;
-    b_texture = texture;
+    curunit = unitt;
+    nextunit = NULL;
+    p_texture = texture;
 
-    if (Unitx != NULL)
+    collider.w = ash_width;
+    collider.h = ash_height;
+
+    if (unitt != NULL)
     {
-        position.x = Unitx->GetPos().x * monster_width;
-        position.y = Unitx->GetPos().y * monster_height;
+        curunit->SetMonster(this);
+        position.x = unitt->GetPos().x * ash_width + width_offset;
+        position.y = unitt->GetPos().y * ash_height + height_offset;
     }
     else
     {
-        position.x = 0;
-        position.y = 0;
+        position.x = width_offset;
+        position.y = height_offset;
     }
 
     curdir = RIGHT;
     nextdir = RIGHT;
 }
 
-void Monster::HandleKeys(SDL_Event *event)
+void Monster::HandleKeys(SDL_Event* event)
 {
 
-    if (event->type == SDL_KEYDOWN && event->key.repeat == 0)
+    /*if (event->type == SDL_KEYDOWN && event->key.repeat == 0)
     {
-        if (event.key.keysys.sym == SDLK_UP)
+        if (event->key.keysym.sym == SDLK_UP || event->key.keysym.sym == SDLK_w)
         {
             nextdir = UP;
         }
-        else if (event.key.keysys.sym == SDLK_DOWN)
+        else if (event->key.keysym.sym == SDLK_DOWN || event->key.keysym.sym == SDLK_s)
         {
             nextdir = DOWN;
         }
-        else if (event.key.keysys.sym == SDLK_LEFT)
+        else if (event->key.keysym.sym == SDLK_LEFT || event->key.keysym.sym == SDLK_a)
         {
             nextdir = LEFT;
         }
-        else if (event.key.keysys.sym == SDLK_RIGHT)
+        else if (event->key.keysym.sym == SDLK_RIGHT || event->key.keysym.sym == SDLK_d)
         {
             nextdir = RIGHT;
         }
-    }
+    }*/
 }
 
-bool Monster::MoveOneUnit(direction dir)
+bool Monster::MoveOneUnit(Direction dir)
 {
     if (dir == UP)
     {
-        if (currUnit.GetPos().y - 1 < 0)
+        if (curunit->GetPos().y - 1 < 0)
         {
             return false;
         }
-        nextunit = Matrix::Area[currUnit.GetPos().x][currUnit.GetPos().y - 1];
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x, curunit->GetPos().y - 1);
+
     }
     else if (dir == DOWN)
     {
-        if (currUnit.GetPos().y + 1 >= Matrix::height)
+        if (curunit->GetPos().y + 1 >= Element_Matrix->height)
         {
             return false;
         }
-        nextunit = Matrix::Area[currUnit.GetPos().x][currUnit.GetPos().y + 1];
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x, curunit->GetPos().y + 1);
     }
     else if (dir == LEFT)
     {
-        if (currUnit.GetPos().x - 1 < 0)
+        if (curunit->GetPos().x - 1 < 0)
         {
             return false;
         }
-        nextunit = Matrix::Area[currUnit.GetPos().x - 1][currUnit.GetPos().y];
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x - 1, curunit->GetPos().y);
     }
     else if (dir == RIGHT)
     {
-        if (currUnit.GetPos().x + 1 >= Matrix::width)
+        if (curunit->GetPos().x + 1 >= Element_Matrix->width)
         {
             return false;
         }
-        nextunit = Matrix::Area[currUnit.GetPos().x + 1][currUnit.GetPos().y];
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x + 1, curunit->GetPos().y);
+    }
+
+    if (nextunit == NULL || nextunit->GetWall() != NULL) {
+        nextunit = NULL;
+        return false;
     }
 
     return true;
@@ -86,8 +107,206 @@ bool Monster::MoveOneUnit(direction dir)
 
 void Monster::Render()
 {
+    p_texture->Render(position.x, position.y);
+    /*if (curdir==UP){
+        p_texture->Render(position.x, position.y, &UP_frames[frame_num]);
+    }
+    else if(curdir==DOWN){
+        p_texture->Render(position.x, position.y, &DOWN_frames[frame_num]);
+    }
+    else if(curdir==LEFT){
+        p_texture->Render(position.x, position.y, &LEFT_frames[frame_num]);
+    }
+    else if(curdir==LEFT){
+        p_texture->Render(position.x, position.y, &RIGHT_frames[frame_num]);
+    }*/
 
+}
 
+void Monster::Refresh() {
+
+    //NOTE
+
+    return;
+    if (curunit != NULL && curunit->GetPokeball() != NULL) {
+        SDL_Rect arr = { position.x, position.y, ash_width, ash_height };
+        // SUS about the Check Collision Method's need.
+        //if (CheckCollisionForTwo(arr, curunit->GetPokeball()->GetCollider())){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        curunit->GetPokeball()->Remove();
+        points++;
+        // }
+    }
+
+    if (curunit != NULL && curunit->GetSquirtle() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetSquirtle()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        curunit->GetSquirtle()->Remove();
+        squrtle = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetJigglyPuff() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetJigglyPuff()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        curunit->GetJigglyPuff()->Remove();
+        jpuff = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetGastly() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetGastly()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        curunit->GetGastly()->Remove();
+        gastly = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetZoroark() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetZoroark()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        curunit->GetZoroark()->Remove();
+        zoroark = true;
+        //}
+    }
+
+    if (curunit == nextunit || nextunit == NULL) {
+        if (curdir != nextdir) {
+            if (MoveOneUnit(nextdir)) {
+                curdir = nextdir;
+            }
+            else {
+                MoveOneUnit(curdir);
+            }
+        }
+        else {
+            MoveOneUnit(curdir);
+        }
+
+        if (nextunit == NULL) {
+            isMoving = false;
+        }
+        else {
+            isMoving = true;
+        }
+    }
+    else {
+
+        if (curdir == UP) {
+            position.y = max(position.y - speed, nextunit->GetPos().y * Unit::height + height_offset);
+        }
+        else if (curdir == DOWN) {
+            position.y = min(position.y + speed, nextunit->GetPos().y * Unit::height + height_offset);
+        }
+        else if (curdir == LEFT) {
+            position.x = max(position.x - speed, nextunit->GetPos().x * Unit::width + width_offset);
+        }
+        else if (curdir == RIGHT) {
+            position.x = min(position.x + speed, nextunit->GetPos().x * Unit::width + width_offset);
+        }
+
+        if ((curdir == LEFT || curdir == RIGHT) && position.x == nextunit->GetPos().x * Unit::width + width_offset) {
+            SetUnit(nextunit);
+        }
+
+        if ((curdir == UP || curdir == DOWN) && position.y == nextunit->GetPos().y * Unit::height + height_offset) {
+            SetUnit(nextunit);
+        }
+        collider.x = position.x;
+        collider.y = position.y;
+    }
+
+}
+
+void Monster::SetDimensions() {
+    UP_frames[0] = {}; //set dimensions in the image 
+    UP_frames[1] = {}; //set dimensions in the image 
+
+    DOWN_frames[0] = {}; //set dimensions in the image 
+    DOWN_frames[1] = {}; //set dimensions in the image 
+
+    LEFT_frames[0] = {}; //set dimensions in the image 
+    LEFT_frames[1] = {}; //set dimensions in the image 
+
+    RIGHT_frames[0] = {}; //set dimensions in the image 
+    RIGHT_frames[1] = {}; //set dimensions in the image
+}
+
+void Monster::SetUnit(Unit* unitt) {
+
+    if (curunit != NULL) { curunit->SetAsh(NULL); }
+    curunit = unitt;
+    if (curunit != NULL) {
+        curunit->SetMonster(this);
+        position.x = curunit->GetPos().x * Unit::width + width_offset;
+        position.y = curunit->GetPos().y * Unit::height + height_offset;
+    }
+}
+
+bool Monster::CheckCollision(SDL_Rect other_collider) {
+
+    if (collider.x + collider.w < other_collider.x) {
+        return false;
+    }
+
+    if (collider.y + collider.h < other_collider.y) {
+        return false;
+    }
+
+    if (collider.x > other_collider.x + other_collider.w) {
+        return false;
+    }
+
+    if (collider.y > other_collider.y + other_collider.h) {
+        return false;
+    }
+
+    return true;
+
+    //CHECK
+
+    /*if (collider.x + collider.w > other_collider.x && collider.x < other_collider.x ){
+        return true;
+    }
+
+    if (collider.y + collider.h > other_collider.y && collider.y < other_collider.y ){
+        return true;
+    }
+
+    if (other_collider.x + other_collider.w  > collider.x && collider.x > other_collider.x ){
+        return true;
+    }
+
+    if (other_collider.y + other_collider.h  > collider.y && collider.y > other_collider.y ){
+        return true;
+    }
+
+    return false;*/
+}
+bool Monster::CheckCollisionForTwo(SDL_Rect first_collider, SDL_Rect second_collider) {
+
+    if (first_collider.x + first_collider.w < second_collider.x) {
+        return false;
+    }
+
+    if (first_collider.y + first_collider.h < second_collider.y) {
+        return false;
+    }
+
+    if (first_collider.x > second_collider.x + second_collider.w) {
+        return false;
+    }
+
+    if (first_collider.y > second_collider.y + second_collider.h) {
+        return false;
+    }
+
+    return true;
+
+}
+
+bool Monster::Motion() {
+    return isMoving;
 }
 
 SDL_Point Monster::GetPos()
@@ -95,26 +314,22 @@ SDL_Point Monster::GetPos()
     return position;
 }
 
-SDL_Rect Monster::GetCollider(){
+SDL_Rect Monster::GetCollider() {
     return collider;
 }
 
-Direction Monster::GetDirection(){
+Direction Monster::GetDirection() {
     return curdir;
 }
 
-Direction Monster::GetNextDirection(){
+Direction Monster::GetNextDirection() {
     return nextdir;
 }
 
-Unit Monster::GetCurUnit(){
+Unit* Monster::GetCurUnit() {
     return curunit;
 }
 
-Unit Monster::GetNextUnit(){
+Unit* Monster::GetNextUnit() {
     return nextunit;
 }
-
-SDL_Rect Monster::GetPos(){
-    return position;
-}*/

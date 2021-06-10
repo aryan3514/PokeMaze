@@ -9,8 +9,9 @@ Pokeball::Pokeball(Unit *Unitx, Texture *texture)
 
     if (Unitx != NULL)
     {
-        position.x = Unitx->GetPos().x * width ;
-        position.y = Unitx->GetPos().y* height ;
+        curunit->SetPokeball(this);
+        position.x = Unitx->GetPos().x * width + width_offset;
+        position.y = Unitx->GetPos().y* height + height_offset;
     }
     else
     {
@@ -34,14 +35,19 @@ void Pokeball::SetUnit(Unit *unitt)
     {
         curunit->SetPokeball(this);
 
-        position.x = curunit->GetPos().x * Unit::width;
-        position.y = curunit->GetPos().y * Unit::height;
+        position.x = curunit->GetPos().x * Unit::width + width_offset;
+        position.y = curunit->GetPos().y * Unit::height + height_offset;
     }
 }
 
 SDL_Rect Pokeball::GetCollider()
 {
     return collider;
+}
+
+void Pokeball::Remove() {
+    Element::Remove();
+    curunit->SetPokeball(NULL);
 }
 
 Unit* Pokeball::GetCurUnit()
