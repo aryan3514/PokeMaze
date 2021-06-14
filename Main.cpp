@@ -38,10 +38,144 @@ Summon Summoner(&Game_Matrix);
 
 vector <Element*> AllFinElements;
 
-
-
-
 SDL_Color game_textcolor = { 255,255, 255 };
+
+void AbilityAction(Matrix* Game_Matrix) {
+
+	if (Game_Matrix->FindAsh()->squrtle) {
+		//exit(0);
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+				AllFinElements[i]->GetMonsterFromElements()->Remove();
+				Game_Matrix->FindAsh()->squrtle = false;
+				break;
+			}
+		}
+	}
+	
+	if (Game_Matrix->FindAsh()->gastly) {
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+				AllFinElements[i]->GetMonsterFromElements()->ConfuseMonster();
+				Game_Matrix->FindAsh()->gastly = false;
+				//break;
+			}
+		}
+	}
+	 
+	if (Game_Matrix->FindAsh()->jpuff) {
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+				AllFinElements[i]->GetMonsterFromElements()->PauseMonster();
+				Game_Matrix->FindAsh()->jpuff = false;
+				//break;
+			}
+		}
+	}
+	
+	if (Game_Matrix->FindAsh()->zoroark) {
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+				AllFinElements[i]->GetMonsterFromElements()->TurnMonsterPowerless();
+				Game_Matrix->FindAsh()->zoroark = false;
+			}
+		}
+	}
+
+}
+
+
+void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int playernum,  TTF_Font* game_font) {
+
+	SDL_Rect ScoreVals = { 0,0, 300, 30 };
+	Texture* score_texture = new Texture();
+
+	bool run2 = true;
+	while (run2) {
+
+
+		for (int i = 0; i < AllFinElements.size(); i++) {
+
+			if (AllFinElements.at(i)->toRemove) {
+				vector<Element*>::iterator it = AllFinElements.begin();
+				while (it != AllFinElements.end()) {
+					if (*it == AllFinElements.at(i)) {
+						AllFinElements.erase(it);
+						break;
+					}
+					it++;
+				}
+			}
+		}
+
+
+
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.type == SDL_QUIT) {
+				run2 = false;
+			}
+
+			for (int i = 0; i < AllFinElements.size(); i++) {
+				AllFinElements[i]->HandleKeys(&game_event);
+			}
+		}
+
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			AllFinElements[i]->Refresh();
+			//AllFinElements[i]->Render();
+		}
+
+
+		if (Game_Matrix.FindAsh() == NULL) {
+			break;
+		}
+
+		AbilityAction(&Game_Matrix);
+
+
+
+		SDL_RenderClear(Game_Renderer);
+
+
+
+		for (int i = 0; i < AllFinElements.size(); i++) {
+			//AllFinElements[i]->Refresh();
+			AllFinElements[i]->Render();
+		}
+
+		if (playernum == 1) {
+			player1_score = Ash::points;
+		}
+		else {
+			player2_score = Ash::points;
+		}
+
+		score_texture->LoadText(game_font, game_textcolor, "Ankita's score : " + to_string(player1_score));
+		score_texture->Render(50 + 200, 15, &ScoreVals, 0.0, NULL, SDL_FLIP_NONE);
+		score_texture->LoadText(game_font, game_textcolor, "Aryan's score : " + to_string(player2_score));
+		score_texture->Render(420 + 200, 15, &ScoreVals, 0.0, NULL, SDL_FLIP_NONE);
+		SDL_RenderPresent(Game_Renderer);
+
+
+	}
+}
+
+
+
+
+
+void RendertoLoc(SDL_Renderer* Game_Renderer,const char* loc,  int x, int y, int w , int h) {
+	SDL_Rect rectangle;
+	
+	rectangle.x = x;
+	rectangle.y = y;
+	rectangle.w =w;
+	rectangle.h = h;
+	SDL_Surface* tempsur = SDL_LoadBMP(loc);
+	SDL_Texture* Teex = SDL_CreateTextureFromSurface(Game_Renderer, tempsur);
+	SDL_RenderCopy(Game_Renderer, Teex, NULL, &rectangle);
+}
+
 
 int main(int argc, char* argv[]) {
 
@@ -52,10 +186,6 @@ int main(int argc, char* argv[]) {
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
 		return 0;
 	}
-
-	
-
-
 
 
 	TTF_Font* game_font = TTF_OpenFont("C:/Users/91887/Desktop/COP Final/renbow.ttf", 35);
@@ -103,16 +233,6 @@ int main(int argc, char* argv[]) {
 	Texture* monster_texture = new Texture();
 	monster_texture->LoadImage("monster.bmp");
 
-	Texture* score_texture = new Texture();
-	//score_texture->LoadImage("n.bmp");
-	
-
-	//SDL_Rect RenderVals = { 0,0, 30, 760 };
-	SDL_Rect ScoreVals = { 0,0, 300, 30};
-	
-
-	
-
 	
 
 	Element::Element_Matrix = &Game_Matrix;
@@ -130,66 +250,79 @@ int main(int argc, char* argv[]) {
 	SDL_Event game_event;
 	
 	bool run = true; 
-	int run2 = true;
+	bool run2 = true;
 
 	
-	
-
-	
-
-	while (run2) {
-
-				
-		for (int i = 0; i < AllFinElements.size(); i++) {
-
-			if (AllFinElements.at(i)->toRemove) {
-				vector<Element*>::iterator it = AllFinElements.begin();
-				while (it != AllFinElements.end()) {
-					if (*it == AllFinElements.at(i)) {
-						AllFinElements.erase(it);
-						break;
-					}
-					it++;
-				}
-			}
-		}
-		
+	Texture* illumi_texture = new Texture();
+	illumi_texture->LoadImage("pol.bmp");
 
 
-		while (SDL_PollEvent(&game_event) != 0) {
-			if (game_event.type == SDL_QUIT) {
-				run2 = false;
-			}
+	RendertoLoc(Game_Renderer, "m.bmp", 0, 0, WIDTH, HEIGHT);
+	RendertoLoc(Game_Renderer, "pol.bmp", 200, 100, 800, 200);
+	RendertoLoc(Game_Renderer, "pik.bmp", 450, 400, 400, 300);
 
-			for (int i = 0; i < AllFinElements.size(); i++) {
-				AllFinElements[i]->HandleKeys(&game_event);
-			}
-		}
-
-		for (int i = 0; i < AllFinElements.size(); i++) {
-			AllFinElements[i]->Refresh();
-			//AllFinElements[i]->Render();
-		}
-
-		
-		SDL_RenderClear(Game_Renderer);
+	while (run) {
 
 		
 
-		for (int i = 0; i < AllFinElements.size(); i++) {
-			//AllFinElements[i]->Refresh();
-			AllFinElements[i]->Render();
-		}
-
-		score_texture->LoadText(game_font, game_textcolor, "Ankita's score : " + to_string(Ash::points));
-		score_texture->Render(50+200, 15, &ScoreVals, 0.0, NULL, SDL_FLIP_NONE);
-		score_texture->LoadText(game_font, game_textcolor, "Aryan's score : 0" );
-		score_texture->Render(420+200, 15, &ScoreVals, 0.0, NULL, SDL_FLIP_NONE);
 		SDL_RenderPresent(Game_Renderer);
 		
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.key.keysym.sym == SDLK_RETURN) {
+				run = false;
+			}
+
+			if (game_event.type == SDL_QUIT) {
+				run = false;
+				run2 = false;
+			}
+		}
+
+	}
+	
+	int player1_score = 0;
+	int player2_score = 0;
+	
+	
+	GameRun(game_event, player1_score, player2_score,1,  game_font);
+	
+
+	
+	//AllFinElements.erase(AllFinElements.begin(), AllFinElements.end()--);
+
+	run = true;
+	RendertoLoc(Game_Renderer, "m.bmp", 0, 0, WIDTH, HEIGHT);
+	RendertoLoc(Game_Renderer, "pol.bmp", 200, 100, 800, 200);
+	RendertoLoc(Game_Renderer, "pik.bmp", 450, 400, 400, 300);
+
+	while (run) {
+
+
+
+		SDL_RenderPresent(Game_Renderer);
+
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.key.keysym.sym == SDLK_RETURN) {
+				run = false;
+			}
+
+			if (game_event.type == SDL_QUIT) {
+				run = false;
+				run2 = false;
+			}
+		}
 
 	}
 
+	
+	Summoner.EmptyAll();
+	Summoner.SummonFromMap("map.txt", TextureHash);
+	Summoner.SummonAll(AllFinElements);
+
+	Ash::points = 0;
+	run2 = true;
+
+	GameRun(game_event, player1_score, player2_score, 2, game_font);
 	
 	//Update the surface
 	

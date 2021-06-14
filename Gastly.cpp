@@ -13,8 +13,8 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
         fposition.x = Unitx->GetPos().x*width + width_offset;
         fposition.y = Unitx->GetPos().y*height + height_offset;
     }else{
-        fposition.x = 0;
-        fposition.y = 0;
+        fposition.x = width_offset;
+        fposition.y = height_offset;
     }
 
     collider.w = width;

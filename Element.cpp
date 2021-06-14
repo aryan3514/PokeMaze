@@ -4,6 +4,8 @@ using namespace std;
 
 Matrix* Element::Element_Matrix = NULL;
 
+
+
 void Element::HandleKeys(SDL_Event* event) {
 	cout << "HandleKeys was not overriden" << endl;
 }
@@ -19,3 +21,9 @@ void Element::Render() {
 void Element::Remove(){
 	toRemove = true;
 }
+
+Monster* Element::GetMonsterFromElements() {
+	return NULL;
+}
+
+

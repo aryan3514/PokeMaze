@@ -88,7 +88,7 @@ bool Ash::MoveOneUnit(Direction dir)
         {
             return false;
         }
-        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x-1, curunit->GetPos().y);
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x - 1, curunit->GetPos().y);
     }
     else if (dir == RIGHT)
     {
@@ -96,11 +96,11 @@ bool Ash::MoveOneUnit(Direction dir)
         {
             return false;
         }
-        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x +1, curunit->GetPos().y);
+        nextunit = Element_Matrix->GetUnitFromMatrix(curunit->GetPos().x + 1, curunit->GetPos().y);
     }
 
-    if (nextunit==NULL || nextunit->GetWall()!=NULL){
-        nextunit=NULL;
+    if (nextunit == NULL || nextunit->GetWall() != NULL) {
+        nextunit = NULL;
         return false;
     }
 
@@ -162,7 +162,8 @@ void Ash::Refresh(){
         // SUS about the Check Collision Method's need.
         //if (CheckCollisionForTwo(arr, curunit->GetPokeball()->GetCollider())){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        //Mix_PlayChannel(-1, ankita, 0);
+       //Mix_PlayChannel(-1, ankita, 0);
+       
         curunit->GetPokeball()->Remove();
         points++;
        // }
@@ -172,6 +173,7 @@ void Ash::Refresh(){
         //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetSquirtle()->GetCollider()){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
         Mix_PlayChannel(-1, SquirtleSound, 0);
+
         curunit->GetSquirtle()->Remove();
         squrtle = true;
         //}
@@ -180,7 +182,7 @@ void Ash::Refresh(){
     if (curunit!=NULL && curunit->GetJigglyPuff()!=NULL){
         //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetJigglyPuff()->GetCollider()){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        Mix_PlayChannel(-1, JigglyPuffSound, 0);
+        //Mix_PlayChannel(-1, JigglyPuffSound, 0);
         curunit->GetJigglyPuff()->Remove();
         jpuff = true;
         //}
@@ -191,7 +193,7 @@ void Ash::Refresh(){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
         Mix_PlayChannel(-1, GastlySound, 0);
         curunit->GetGastly()->Remove();
-            gastly = true;
+        gastly = true;
         //}
     }
 
@@ -330,6 +332,11 @@ bool Ash::CheckCollisionForTwo(SDL_Rect first_collider, SDL_Rect second_collider
 
     return true;
 
+}
+
+void Ash::Remove(){
+    Element::Remove();
+    curunit->SetAsh(NULL);
 }
 
 bool Ash::Motion(){

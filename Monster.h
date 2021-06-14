@@ -12,6 +12,8 @@
 #include "Zoroark.h"
 #include "Gastly.h"
 #include "Wall.h"
+#include <queue>
+using namespace std;
 
 class Monster : public Element {
 public:
@@ -28,7 +30,7 @@ public:
 
     bool zoroark = false;
 
-    int speed = 4;
+    int speed = 2;
 
 
     int ash_width = 20;
@@ -36,7 +38,11 @@ public:
 
     int animcount = 4;
 
+    bool pause = false;
 
+    bool invincible = false;
+
+    bool confusion = false;
 
     int frame_num = 0;
 
@@ -65,6 +71,8 @@ public:
 
     void Render();
 
+    vector<Unit*> Byakugan(Unit* start, Unit* goal);
+
     bool CheckCollision(SDL_Rect other_collider);
 
     bool CheckCollisionForTwo(SDL_Rect first_collider, SDL_Rect second_collider);
@@ -74,6 +82,16 @@ public:
     bool MoveOneUnit(Direction dir);
 
     bool Motion();
+
+    void PauseMonster();
+
+    void ResumeMonster();
+
+    void TurnMonsterPowerless();
+
+    void ConfuseMonster();
+
+    Monster* GetMonsterFromElements();
 
     SDL_Rect GetCollider();
 
@@ -87,4 +105,23 @@ public:
 
     SDL_Point GetPos();
 
+    template <typename A, typename B>
+    struct Cospair
+    {
+        Unit* unitt;
+        float f;
+
+        Cospair(Unit* uni, float val)
+        {
+            unitt = uni;
+            f = val;
+        }
+
+        bool operator<(const struct Cospair& other) const
+        {
+            return f > other.f;
+        }
+    };
+
+    ;
 };

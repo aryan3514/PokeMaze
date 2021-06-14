@@ -8,8 +8,8 @@
 class Zoroark : public Element {
 
 public:
-    int width = 20;
-    int height = 20;
+    int width = 30;
+    int height = 30;
 
     SDL_Point fposition;
     Unit* curunit;

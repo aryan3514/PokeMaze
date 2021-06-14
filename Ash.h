@@ -40,11 +40,12 @@ public:
 
     bool zoroark = false;
 
-    int speed = 4;
+    int speed = 3;
 
 
     int ash_width = 30;
     int ash_height = 30;
+
     
     int animcount = 4;
 
@@ -76,6 +77,8 @@ public:
     void SetUnit(Unit* unitt);
 
     void Refresh();
+
+    void Remove();
 
     void Render();
 

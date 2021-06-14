@@ -63,6 +63,11 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 
 }
 
+
+void Summon::EmptyAll() {
+	AllElements.erase(AllElements.begin(), AllElements.end());
+}
+
 void Summon::SummonAll(vector <Element*> &AllGameElements){
 	
 	AllGameElements = AllElements;

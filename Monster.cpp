@@ -4,12 +4,21 @@
 #include "Matrix.h"
 #include <string>
 #include "Ash.h"
+#include <cmath>
 #include <algorithm>
 #include <fstream>
+#include <map>
+#include <stdio.h>
+#include <stdlib.h>
+#include<time.h>
 using namespace std;
 
 
+
 int Monster::points = 0;
+
+
+
 
 Monster::Monster(Unit* unitt, Texture* texture)
 {
@@ -123,97 +132,198 @@ void Monster::Render()
 
 }
 
+
+vector<Unit*> Monster::Byakugan(Unit* start, Unit* goal) {
+    map<Unit*, Unit*> old_path;
+    map<Unit*, float> cost;
+
+    old_path[start] = start;
+    cost[start] = 0;
+
+    priority_queue<Cospair<Unit*, float>> PriorityUnit;
+    
+
+    PriorityUnit.emplace(Cospair<Unit*, float>(start, 0));
+    vector<Unit*> path;
+    
+    while (!PriorityUnit.empty()) {
+        
+        Unit* curr = PriorityUnit.top().unitt;
+        PriorityUnit.pop();
+
+        if (curr == goal) {
+            break;
+        }
+
+        
+        vector<Unit*> neburs = Element_Matrix->GetNeighbours(curr);
+
+
+        for (int i = 0; i < neburs.size(); i++) {
+            float ncost = cost[curr] + 1;
+
+            if (neburs[i] != NULL && (!cost.count(neburs[i]) || ncost < cost[neburs[i]])){
+
+                if (neburs[i]->GetWall()!=NULL) ncost = INFINITY;
+
+                cost[neburs[i]] = ncost;
+
+                PriorityUnit.emplace(Cospair<Unit*, float>(neburs[i], ncost + abs(goal->GetPos().x - neburs[i]->GetPos().x) + abs(goal->GetPos().y - neburs[i]->GetPos().y)));
+                old_path[neburs[i]] = curr;
+            }
+
+        }
+    }
+
+    
+
+    
+    Unit* current = goal;
+
+    path.push_back(current);
+
+    while (current != start) {
+        current = old_path[current];
+        path.push_back(current);
+    }
+
+    reverse(path.begin(), path.end());
+
+    return path;
+
+}
+
+
+void Monster::PauseMonster() {
+    pause = true;
+}
+
+void Monster::ResumeMonster() {
+    pause = false;
+}
+
+void Monster::TurnMonsterPowerless() {
+    invincible = true;
+}
+
+void Monster::ConfuseMonster() {
+    confusion = true;
+}
+
+Monster* Monster::GetMonsterFromElements(){
+    return curunit->GetMonster();
+}
+
 void Monster::Refresh() {
 
-    //NOTE
+    srand(time(0));
+    
+    Ash* Ashboy = Element_Matrix->FindAsh();
 
-    return;
-    if (curunit != NULL && curunit->GetPokeball() != NULL) {
-        SDL_Rect arr = { position.x, position.y, ash_width, ash_height };
-        // SUS about the Check Collision Method's need.
-        //if (CheckCollisionForTwo(arr, curunit->GetPokeball()->GetCollider())){
-            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        curunit->GetPokeball()->Remove();
-        points++;
-        // }
-    }
 
-    if (curunit != NULL && curunit->GetSquirtle() != NULL) {
-        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetSquirtle()->GetCollider()){
-            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        curunit->GetSquirtle()->Remove();
-        squrtle = true;
-        //}
-    }
+    if (Ashboy != NULL) {
 
-    if (curunit != NULL && curunit->GetJigglyPuff() != NULL) {
-        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetJigglyPuff()->GetCollider()){
-            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        curunit->GetJigglyPuff()->Remove();
-        jpuff = true;
-        //}
-    }
+        if (curunit == nextunit || nextunit==NULL) {
+            
+            if (Ashboy == NULL) {
+                return;
+            }
 
-    if (curunit != NULL && curunit->GetGastly() != NULL) {
-        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetGastly()->GetCollider()){
-            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        curunit->GetGastly()->Remove();
-        gastly = true;
-        //}
-    }
+            vector<Unit*>  finpath;
 
-    if (curunit != NULL && curunit->GetZoroark() != NULL) {
-        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetZoroark()->GetCollider()){
-            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        curunit->GetZoroark()->Remove();
-        zoroark = true;
-        //}
-    }
+            if (confusion) {
 
-    if (curunit == nextunit || nextunit == NULL) {
-        if (curdir != nextdir) {
-            if (MoveOneUnit(nextdir)) {
-                curdir = nextdir;
+
+                int a = rand() % (Element_Matrix->width);
+                int b = rand() % (Element_Matrix->height);
+
+                while (Element_Matrix->GetUnitFromMatrix(a, b)!=NULL && Element_Matrix->GetUnitFromMatrix(a, b)->GetMonster()!=NULL) {
+
+                    a = rand() % (Element_Matrix->width);
+                    b = rand() % (Element_Matrix->height);
+                }
+                finpath = Byakugan(curunit, Element_Matrix->GetUnitFromMatrix(a, b));
             }
             else {
-                MoveOneUnit(curdir);
+                finpath = Byakugan(curunit, Ashboy->GetCurUnit());
+            }
+            
+
+            if (finpath.size() < 2) {
+                return;
+            }
+
+            if (pause) {
+                nextunit = curunit;
+            }
+            else {
+                nextunit = finpath[1];
+            }
+
+
+            if (position.x < nextunit->GetPos().x * Unit::width + width_offset) {
+                curdir = RIGHT;
+            }
+            else if (position.x > nextunit->GetPos().x * Unit::width + width_offset) {
+                curdir = LEFT;
+            }
+            else if (position.y < nextunit->GetPos().y * Unit::height + height_offset) {
+                curdir = DOWN;
+            }
+            else if (position.y > nextunit->GetPos().y * Unit::height + height_offset) {
+                curdir = UP;
+            }
+
+            for (auto i : Element_Matrix->GetNeighbours(curunit)) {
+                if (i->GetAsh() != NULL && !invincible) {
+                    i->GetAsh()->Remove();
+                    //exit(0);
+                    return;
+                }
             }
         }
-        else {
-            MoveOneUnit(curdir);
-        }
 
-        if (nextunit == NULL) {
-            isMoving = false;
+        if (!confusion) {
+
+            if (curdir == UP) {
+                position.y = max(position.y - speed, nextunit->GetPos().y * Unit::height + height_offset);
+            }
+            else if (curdir == DOWN) {
+                position.y = min(position.y + speed, nextunit->GetPos().y * Unit::height + height_offset);
+            }
+            else if (curdir == LEFT) {
+                position.x = max(position.x - speed, nextunit->GetPos().x * Unit::width + width_offset);
+            }
+            else if (curdir == RIGHT) {
+                position.x = min(position.x + speed, nextunit->GetPos().x * Unit::width + width_offset);
+            }
+
         }
         else {
-            isMoving = true;
+            if (curdir == UP) {
+                position.y = max(position.y - speed, nextunit->GetPos().y * Unit::height + height_offset);
+            }
+            else if (curdir == DOWN) {
+                position.y = min(position.y + speed, nextunit->GetPos().y * Unit::height + height_offset);
+            }
+            else if (curdir == LEFT) {
+                position.x = max(position.x - speed, nextunit->GetPos().x * Unit::width + width_offset);
+            }
+            else if (curdir == RIGHT) {
+                position.x = min(position.x + speed, nextunit->GetPos().x * Unit::width + width_offset);
+            }
         }
-    }
-    else {
-
-        if (curdir == UP) {
-            position.y = max(position.y - speed, nextunit->GetPos().y * Unit::height + height_offset);
-        }
-        else if (curdir == DOWN) {
-            position.y = min(position.y + speed, nextunit->GetPos().y * Unit::height + height_offset);
-        }
-        else if (curdir == LEFT) {
-            position.x = max(position.x - speed, nextunit->GetPos().x * Unit::width + width_offset);
-        }
-        else if (curdir == RIGHT) {
-            position.x = min(position.x + speed, nextunit->GetPos().x * Unit::width + width_offset);
-        }
+        
 
         if ((curdir == LEFT || curdir == RIGHT) && position.x == nextunit->GetPos().x * Unit::width + width_offset) {
+
             SetUnit(nextunit);
         }
 
         if ((curdir == UP || curdir == DOWN) && position.y == nextunit->GetPos().y * Unit::height + height_offset) {
             SetUnit(nextunit);
         }
-        collider.x = position.x;
-        collider.y = position.y;
+
     }
 
 }
@@ -234,7 +344,7 @@ void Monster::SetDimensions() {
 
 void Monster::SetUnit(Unit* unitt) {
 
-    if (curunit != NULL) { curunit->SetAsh(NULL); }
+    if (curunit != NULL) { curunit->SetMonster(NULL); }
     curunit = unitt;
     if (curunit != NULL) {
         curunit->SetMonster(this);
