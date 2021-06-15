@@ -64,6 +64,17 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 }
 
 
+void Summon::SummonOneMonster(int x, int y, map<string, Texture*> AllTextures, vector <Element*>& AllGameElements) {
+	Element* curel = NULL;
+	Unit* uni = FinMatrix->GetUnitFromMatrix(x, y);
+	curel = new Monster(uni, AllTextures.find("monster")->second);
+	if (curel != NULL) {
+		AllElements.push_back(curel);
+	}
+	AllGameElements.push_back(curel);
+
+}
+
 void Summon::EmptyAll() {
 	AllElements.erase(AllElements.begin(), AllElements.end());
 }

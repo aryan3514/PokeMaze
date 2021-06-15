@@ -30,6 +30,8 @@ public:
 
 	void SummonAll(vector <Element*> &AllGameElements);
 
+	void SummonOneMonster(int x, int y, map<string, Texture*> AllTextures, vector <Element*>& AllGameElements);
+
 	void EmptyAll();
 
 };

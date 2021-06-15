@@ -41,7 +41,7 @@ vector <Element*> AllFinElements;
 
 SDL_Color game_textcolor = { 255,255, 255 };
 
-void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool &j, bool &g, bool &z) {
+void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer,bool &s, bool &j, bool &g, bool &z) {
 
 	if (Game_Matrix->FindAsh()->squrtle) {
 		
@@ -52,11 +52,11 @@ void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_tim
 				break;
 			}
 		}
-		
+		s = true;
+		time(&squirtle_timer);
 	}
 	
 	if (Game_Matrix->FindAsh()->gastly) {
-		gastly_timer = 0;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->ConfuseMonster();
@@ -69,7 +69,7 @@ void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_tim
 	}
 	 
 	if (Game_Matrix->FindAsh()->jpuff) {
-		jpuff_timer = 0;
+
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->PauseMonster();
@@ -82,7 +82,7 @@ void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_tim
 	}
 	
 	if (Game_Matrix->FindAsh()->zoroark) {
-		zoroark_timer = 0;
+
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->TurnMonsterPowerless();
@@ -98,8 +98,18 @@ void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_tim
 
 
 
-void CheckAbilityTime(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool j, bool g, bool z, double timelimit) {
+void CheckAbilityTime(Matrix* Game_Matrix, map<string, Texture*> AllTextures , time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool &s, bool &j, bool &g, bool &z, double timelimit) {
 	time_t endt;
+
+	if (s) {
+		if (difftime(time(&endt), squirtle_timer) >= 2*timelimit) {
+			//exit(0);
+			Summoner.SummonOneMonster(0, 0, AllTextures, AllFinElements);
+			
+			s = false;
+		}
+	}
+
 	if (j) {
 		if (difftime(time(&endt), jpuff_timer) >= timelimit) {
 			for (int i = 0; i < AllFinElements.size(); i++) {
@@ -123,7 +133,7 @@ void CheckAbilityTime(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_
 	}
 
 	if (g) {
-		if (difftime(time(&endt), jpuff_timer) >= timelimit) {
+		if (difftime(time(&endt), gastly_timer) >= timelimit) {
 			for (int i = 0; i < AllFinElements.size(); i++) {
 				if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 					AllFinElements[i]->GetMonsterFromElements()->RemoveConfusion();
@@ -135,13 +145,14 @@ void CheckAbilityTime(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_
 }
 
 
-void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int playernum,  TTF_Font* game_font) {
+void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int playernum,  TTF_Font* game_font, map<string, Texture*> AllTextures) {
 
 	SDL_Rect ScoreVals = { 0,0, 300, 30 };
 	Texture* score_texture = new Texture();
 
 	bool run2 = true;
-
+	
+	time_t squirtle_timer;
 	time_t jpuff_timer ;
 	time_t zoroark_timer ;
 	time_t gastly_timer;
@@ -149,6 +160,7 @@ void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int p
 	bool jpuff_on = false;
 	bool gastly_on = false;
 	bool zoroark_on = false;
+	bool squirtle_on = false;
 	
 	
 	while (run2) {
@@ -190,9 +202,16 @@ void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int p
 			break;
 		}
 
-		
-		AbilityAction(&Game_Matrix, jpuff_timer, zoroark_timer, gastly_timer, jpuff_on, zoroark_on, gastly_on);
-		CheckAbilityTime(&Game_Matrix, jpuff_timer, zoroark_timer,gastly_timer, jpuff_on, zoroark_on, gastly_on, 5);
+		int ability_boost = 0;
+		if (playernum == 1) {
+			ability_boost = player1_score;
+		}
+		else {
+			ability_boost = player2_score;
+		}
+
+		AbilityAction(&Game_Matrix,squirtle_timer, jpuff_timer, zoroark_timer, gastly_timer,squirtle_on, jpuff_on, zoroark_on, gastly_on);
+		CheckAbilityTime(&Game_Matrix, AllTextures, squirtle_timer, jpuff_timer, zoroark_timer,gastly_timer, squirtle_on, jpuff_on, zoroark_on, gastly_on, 5 + ability_boost/100 );
 
 
 		SDL_RenderClear(Game_Renderer);
@@ -345,7 +364,7 @@ int main(int argc, char* argv[]) {
 	int player2_score = 0;
 	
 	
-	GameRun(game_event, player1_score, player2_score,1,  game_font);
+	GameRun(game_event, player1_score, player2_score,1,  game_font, TextureHash);
 	
 
 	
@@ -383,7 +402,7 @@ int main(int argc, char* argv[]) {
 	Ash::points = 0;
 	run2 = true;
 
-	GameRun(game_event, player1_score, player2_score, 2, game_font);
+	GameRun(game_event, player1_score, player2_score, 2, game_font, TextureHash);
 	
 	//Update the surface
 	

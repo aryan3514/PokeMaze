@@ -21,7 +21,7 @@ public:
 	void LoadImage(std::string path);
 	void LoadText(TTF_Font* FONT, SDL_Color colour, std::string sentance);
 	// Window Render
-	void Render(int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* centre = NULL, SDL_RendererFlip RFlip = SDL_FLIP_NONE);
+	void Render(int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* centre = NULL, SDL_RendererFlip RFlip );
 
 	void empty(); // emptys all the assets
 	//Get Height and Width
