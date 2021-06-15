@@ -20,6 +20,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <map>
+#include <ctime>
 
 using namespace std;
 
@@ -40,20 +41,22 @@ vector <Element*> AllFinElements;
 
 SDL_Color game_textcolor = { 255,255, 255 };
 
-void AbilityAction(Matrix* Game_Matrix) {
+void AbilityAction(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool &j, bool &g, bool &z) {
 
 	if (Game_Matrix->FindAsh()->squrtle) {
-		//exit(0);
+		
+		Game_Matrix->FindAsh()->squrtle = false;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->Remove();
-				Game_Matrix->FindAsh()->squrtle = false;
 				break;
 			}
 		}
+		
 	}
 	
 	if (Game_Matrix->FindAsh()->gastly) {
+		gastly_timer = 0;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->ConfuseMonster();
@@ -61,9 +64,12 @@ void AbilityAction(Matrix* Game_Matrix) {
 				//break;
 			}
 		}
+		g = true;
+		time(&gastly_timer) ;
 	}
 	 
 	if (Game_Matrix->FindAsh()->jpuff) {
+		jpuff_timer = 0;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->PauseMonster();
@@ -71,17 +77,61 @@ void AbilityAction(Matrix* Game_Matrix) {
 				//break;
 			}
 		}
+		j = true;
+		time(&jpuff_timer);
 	}
 	
 	if (Game_Matrix->FindAsh()->zoroark) {
+		zoroark_timer = 0;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 				AllFinElements[i]->GetMonsterFromElements()->TurnMonsterPowerless();
 				Game_Matrix->FindAsh()->zoroark = false;
 			}
 		}
+		z = true;
+		time(&zoroark_timer);
 	}
 
+
+}
+
+
+
+void CheckAbilityTime(Matrix* Game_Matrix, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool j, bool g, bool z, double timelimit) {
+	time_t endt;
+	if (j) {
+		if (difftime(time(&endt), jpuff_timer) >= timelimit) {
+			for (int i = 0; i < AllFinElements.size(); i++) {
+				if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+					AllFinElements[i]->GetMonsterFromElements()->ResumeMonster();
+				}
+			}
+			j = false;
+		}
+	}
+
+	if (z) {
+		if (difftime(time(&endt), zoroark_timer) >= timelimit) {
+			for (int i = 0; i < AllFinElements.size(); i++) {
+				if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+					AllFinElements[i]->GetMonsterFromElements()->TurnMonsterPowerful();
+				}
+			}
+			z = false;
+		}
+	}
+
+	if (g) {
+		if (difftime(time(&endt), jpuff_timer) >= timelimit) {
+			for (int i = 0; i < AllFinElements.size(); i++) {
+				if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+					AllFinElements[i]->GetMonsterFromElements()->RemoveConfusion();
+				}
+			}
+			g = false;
+		}
+	}
 }
 
 
@@ -91,6 +141,16 @@ void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int p
 	Texture* score_texture = new Texture();
 
 	bool run2 = true;
+
+	time_t jpuff_timer ;
+	time_t zoroark_timer ;
+	time_t gastly_timer;
+
+	bool jpuff_on = false;
+	bool gastly_on = false;
+	bool zoroark_on = false;
+	
+	
 	while (run2) {
 
 
@@ -130,8 +190,9 @@ void GameRun(SDL_Event game_event, int &player1_score, int &player2_score, int p
 			break;
 		}
 
-		AbilityAction(&Game_Matrix);
-
+		
+		AbilityAction(&Game_Matrix, jpuff_timer, zoroark_timer, gastly_timer, jpuff_on, zoroark_on, gastly_on);
+		CheckAbilityTime(&Game_Matrix, jpuff_timer, zoroark_timer,gastly_timer, jpuff_on, zoroark_on, gastly_on, 5);
 
 
 		SDL_RenderClear(Game_Renderer);

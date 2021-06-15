@@ -91,6 +91,10 @@ public:
 
     void ConfuseMonster();
 
+    void TurnMonsterPowerful();
+
+    void RemoveConfusion();
+
     Monster* GetMonsterFromElements();
 
     SDL_Rect GetCollider();

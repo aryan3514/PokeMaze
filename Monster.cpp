@@ -206,8 +206,16 @@ void Monster::TurnMonsterPowerless() {
     invincible = true;
 }
 
+void Monster::TurnMonsterPowerful() {
+    invincible = false;
+}
+
 void Monster::ConfuseMonster() {
     confusion = true;
+}
+
+void Monster::RemoveConfusion() {
+    confusion = false;
 }
 
 Monster* Monster::GetMonsterFromElements(){
