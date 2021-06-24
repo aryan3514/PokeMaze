@@ -35,7 +35,7 @@ void Squirtle::SetUnit(Unit *unitt)
 
 
 void Squirtle::Render(){
-    ftexture->Render(fposition.x, fposition.y);
+    ftexture->Render(fposition.x, fposition.y,0, SDL_FLIP_NONE);
 }
 
 void Squirtle::Remove() {

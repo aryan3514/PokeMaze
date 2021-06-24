@@ -34,12 +34,12 @@ void JigglyPuff::SetUnit(Unit* unitt)
 
 
 void JigglyPuff::Render() {
-    ftexture->Render(fposition.x, fposition.y);
+    ftexture->Render(fposition.x, fposition.y,0, SDL_FLIP_NONE);
 }
 
 void JigglyPuff::Remove() {
     Element::Remove();
-    curunit->SetSquirtle(NULL);
+    curunit->SetJigglyPuff(NULL);
 }
 
 SDL_Point JigglyPuff::GetPos() {

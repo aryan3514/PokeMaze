@@ -31,7 +31,7 @@ void Wall::SetUnit(Unit* unitt){
 
 void Wall::Render()
 {
-	walltexture->Render(position.x, position.y);
+	walltexture->Render(position.x, position.y,0, SDL_FLIP_NONE);
 }
 
 SDL_Rect Wall::GetCollider(){

@@ -116,7 +116,7 @@ bool Monster::MoveOneUnit(Direction dir)
 
 void Monster::Render()
 {
-    p_texture->Render(position.x, position.y);
+    p_texture->Render(position.x, position.y,0, SDL_FLIP_NONE);
     /*if (curdir==UP){
         p_texture->Render(position.x, position.y, &UP_frames[frame_num]);
     }
@@ -164,7 +164,7 @@ vector<Unit*> Monster::Byakugan(Unit* start, Unit* goal) {
 
             if (neburs[i] != NULL && (!cost.count(neburs[i]) || ncost < cost[neburs[i]])){
 
-                if (neburs[i]->GetWall()!=NULL) ncost = INFINITY;
+                if (neburs[i]->GetWall()!=NULL|| neburs[i]->GetMonster()!=NULL) ncost = INFINITY;
 
                 cost[neburs[i]] = ncost;
 
@@ -261,6 +261,8 @@ void Monster::Refresh() {
                 return;
             }
 
+            
+
             if (pause) {
                 nextunit = curunit;
             }
@@ -268,6 +270,7 @@ void Monster::Refresh() {
                 nextunit = finpath[1];
             }
 
+            
 
             if (position.x < nextunit->GetPos().x * Unit::width + width_offset) {
                 curdir = RIGHT;
@@ -324,12 +327,23 @@ void Monster::Refresh() {
         
 
         if ((curdir == LEFT || curdir == RIGHT) && position.x == nextunit->GetPos().x * Unit::width + width_offset) {
-
-            SetUnit(nextunit);
+            if (nextunit->GetMonster() != NULL) {
+                position.x == curunit->GetPos().x * Unit::width + width_offset;
+                SetUnit(curunit);
+            }
+            else {
+                SetUnit(nextunit);
+            }
         }
 
         if ((curdir == UP || curdir == DOWN) && position.y == nextunit->GetPos().y * Unit::height + height_offset) {
-            SetUnit(nextunit);
+            if (nextunit->GetMonster() != NULL) {
+                position.y == curunit->GetPos().y * Unit::height + height_offset;
+                SetUnit(curunit);
+            }
+            else {
+                SetUnit(nextunit);
+            }
         }
 
     }

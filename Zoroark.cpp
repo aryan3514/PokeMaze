@@ -19,7 +19,7 @@ Zoroark::Zoroark (Unit* Unitx, Texture* texture){
 }
 
 void Zoroark::Render(){
-    ftexture->Render(fposition.x, fposition.y);
+    ftexture->Render(fposition.x, fposition.y,0, SDL_FLIP_NONE);
 }
 
 SDL_Point Zoroark::GetPos(){

@@ -26,7 +26,7 @@ Gastly::Gastly (Unit* Unitx, Texture* texture){
 }
 
 void Gastly::Render(){
-    ftexture->Render(fposition.x, fposition.y);
+    ftexture->Render(fposition.x, fposition.y,0,SDL_FLIP_NONE);
 }
 
 SDL_Point Gastly::GetPos(){

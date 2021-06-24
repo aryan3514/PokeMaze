@@ -57,7 +57,7 @@ Unit* Pokeball::GetCurUnit()
 
 void Pokeball::Render()
 {
-    ftexture->Render(position.x, position.y);
+    ftexture->Render(position.x, position.y,0, SDL_FLIP_NONE);
 }
 
 SDL_Point Pokeball::GetPos()

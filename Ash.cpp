@@ -124,7 +124,7 @@ bool Ash::LoadSound()
     ankita = Mix_LoadWAV("ank.wav");
     SquirtleSound = Mix_LoadWAV("squirtle.wav");
     JigglyPuffSound = Mix_LoadWAV("jigglypuff.wav");
-    GastlySound = Mix_LoadWAV("Gengar.wav");
+    GastlySound = Mix_LoadWAV("gastly.wav");
     ZoroarkSound = Mix_LoadWAV("zoroark.wav");
 
     if (SquirtleSound == NULL || JigglyPuffSound == NULL || GastlySound == NULL || ZoroarkSound == NULL) {
@@ -136,19 +136,19 @@ bool Ash::LoadSound()
 
 void Ash::Render()
 {
-    p_texture->Render(position.x, position.y);
-    /*if (curdir==UP){
-        p_texture->Render(position.x, position.y, &UP_frames[frame_num]);
+    
+    if (curdir==UP){
+        p_texture->Render(position.x, position.y, 270, SDL_FLIP_NONE);
     }
     else if(curdir==DOWN){
-        p_texture->Render(position.x, position.y, &DOWN_frames[frame_num]);
+        p_texture->Render(position.x, position.y,90, SDL_FLIP_NONE);
     }
     else if(curdir==LEFT){
-        p_texture->Render(position.x, position.y, &LEFT_frames[frame_num]);
+        p_texture->Render(position.x, position.y, 0.0, SDL_FLIP_HORIZONTAL);
     }
-    else if(curdir==LEFT){
-        p_texture->Render(position.x, position.y, &RIGHT_frames[frame_num]);
-    }*/
+    else if(curdir==RIGHT){
+        p_texture->Render(position.x, position.y, 0.0, SDL_FLIP_NONE);
+    }
 
 }
 
@@ -182,7 +182,7 @@ void Ash::Refresh(){
     if (curunit!=NULL && curunit->GetJigglyPuff()!=NULL){
         //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetJigglyPuff()->GetCollider()){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-        //Mix_PlayChannel(-1, JigglyPuffSound, 0);
+        Mix_PlayChannel(-1, JigglyPuffSound, 0);
         curunit->GetJigglyPuff()->Remove();
         jpuff = true;
         //}

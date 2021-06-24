@@ -14,7 +14,7 @@ Texture::Texture() {
 }
 
 
-void Texture::LoadImage(string path) {
+void Texture::LoadImageFromPath(string path) {
 	
 	empty();
 
@@ -76,7 +76,7 @@ int Texture::GHeight(){
 	return height;
 }
 
-void Texture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* centre, SDL_RendererFlip RFlip) {
+void Texture::Render(int x, int y, double angle, SDL_RendererFlip RFlip, SDL_Rect* clip,  SDL_Point* centre) {
 
 
 	if (Renderer == NULL) {
@@ -92,7 +92,10 @@ void Texture::Render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* cent
 		RenderVals.h = clip->h;
 
 	}
-	SDL_RenderCopyEx(Renderer, Tex,  clip, &RenderVals, angle, centre, RFlip);
+
+	SDL_Point centree = { 15,15 };
+
+	SDL_RenderCopyEx(Renderer, Tex,  clip, &RenderVals, angle, &centree, RFlip);
 }
 
 
