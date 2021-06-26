@@ -92,6 +92,10 @@ public:
 
     bool Motion();
 
+    bool isAsh();
+
+    void ViewRefresh();
+
     SDL_Rect GetCollider();
 
     Direction GetDirection();

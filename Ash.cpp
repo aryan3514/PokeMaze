@@ -108,6 +108,10 @@ bool Ash::MoveOneUnit(Direction dir)
 }
 
 
+bool Ash::isAsh() {
+    return true;
+}
+
 bool Ash::LoadSound()
 {
 
@@ -243,6 +247,66 @@ void Ash::Refresh(){
         }
         collider.x = position.x;
         collider.y = position.y;
+    }
+
+}
+
+void Ash::ViewRefresh() {
+
+    double unx = (double)(position.x - width_offset) / (double)Unit::width;;
+    double uny = (double)(position.y - height_offset) / (double)Unit::height;;
+
+    if (floor(unx) == unx && floor(uny) == uny) {
+        SetUnit(Element_Matrix->GetUnitFromMatrix(unx, uny));
+    }
+
+    if (curunit != NULL && curunit->GetPokeball() != NULL) {
+        SDL_Rect arr = { position.x, position.y, ash_width, ash_height };
+        // SUS about the Check Collision Method's need.
+        //if (CheckCollisionForTwo(arr, curunit->GetPokeball()->GetCollider())){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+       //Mix_PlayChannel(-1, ankita, 0);
+
+        curunit->GetPokeball()->Remove();
+        points++;
+        // }
+    }
+
+    if (curunit != NULL && curunit->GetSquirtle() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetSquirtle()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        Mix_PlayChannel(-1, SquirtleSound, 0);
+
+        curunit->GetSquirtle()->Remove();
+        squrtle = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetJigglyPuff() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetJigglyPuff()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        Mix_PlayChannel(-1, JigglyPuffSound, 0);
+        curunit->GetJigglyPuff()->Remove();
+        jpuff = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetGastly() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetGastly()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        Mix_PlayChannel(-1, GastlySound, 0);
+        curunit->GetGastly()->Remove();
+        gastly = true;
+        //}
+    }
+
+    if (curunit != NULL && curunit->GetZoroark() != NULL) {
+        //if (CheckCollisionForTwo(SDL_Rect(position.x,position.y, ash_width, ash_height), nextunit->GetZoroark()->GetCollider()){
+            //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
+        Mix_PlayChannel(-1, ZoroarkSound, 0);
+        curunit->GetZoroark()->Remove();
+        zoroark = true;
+        //}
     }
 
 }

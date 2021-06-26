@@ -22,8 +22,19 @@ void Element::Remove(){
 	toRemove = true;
 }
 
+void Element::ViewRefresh() {}
+
+bool Element::isAsh() {
+	return false;
+}
+
+bool Element::isMonster() {
+	return false;
+}
+
 Monster* Element::GetMonsterFromElements() {
 	return NULL;
 }
+
 
 

@@ -17,9 +17,15 @@ public:
 
 	virtual void Refresh();
 
+	virtual void ViewRefresh();
+
 	virtual void Render();
 
 	virtual void Remove();
+
+	virtual bool isAsh();
+
+	virtual bool isMonster();
 
 	virtual Monster* GetMonsterFromElements();
 

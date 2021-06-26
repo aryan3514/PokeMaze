@@ -6,6 +6,7 @@
 #include "Ash.h"
 #include <cmath>
 #include <algorithm>
+#include <algorithm>
 #include <fstream>
 #include <map>
 #include <stdio.h>
@@ -348,6 +349,21 @@ void Monster::Refresh() {
 
     }
 
+}
+
+bool Monster::isMonster() {
+    return false;
+}
+void Monster::ViewRefresh() {
+
+    double unx = (double) (position.x - width_offset) / (double)Unit::width;;
+    double uny = (double)(position.y - height_offset) / (double) Unit::height;;
+
+    if (floor(unx) == unx && floor(uny) == uny) {
+        SetUnit(Element_Matrix->GetUnitFromMatrix(unx,uny));
+    }
+   
+    
 }
 
 void Monster::SetDimensions() {

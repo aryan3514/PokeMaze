@@ -30,7 +30,7 @@ public:
 
     bool zoroark = false;
 
-    int speed = 2;
+    int speed = 1;
 
 
     int ash_width = 20;
@@ -80,6 +80,10 @@ public:
     void HandleKeys(SDL_Event* event);
 
     bool MoveOneUnit(Direction dir);
+
+    void ViewRefresh();
+
+    bool isMonster();
 
     bool Motion();
 
