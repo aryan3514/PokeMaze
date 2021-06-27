@@ -289,9 +289,38 @@ void CheckAbilityTime(Matrix* Game_Matrix, map<string, Texture*> AllTextures , S
 	}
 }
 
+void Wait(SDL_Event* e, SDL_Texture* arr) {
+	bool run = true;
 
+	while (run) {
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.key.keysym.sym == SDLK_RETURN) {
+				SDL_Delay(150);
+				run = false;
+				//exit(0);
+			}
+			else if (game_event.type == SDL_QUIT) {
+				exit(0);
+			}
+		}
+
+		RendertoLocc(Game_Renderer, arr, 0, 0, WIDTH, HEIGHT);
+		SDL_RenderPresent(Game_Renderer);
+	}
+}
 
 void NameAndIntro(SDL_Event game_event,  int playernum, TTF_Font* game_font, map<string, Texture*> AllTextures, SDL_Texture* ShowImages[]) {
+	
+	
+	
+	if (myplayernum != playernum) {
+		Wait(&game_event, ShowImages[1]);
+		players.push_back(tuple<int, string>(0, "online_player"));
+		return;
+	}
+	
+	
+	
 	string inputText = "Enter your name : ";
 	string player_name = "";
 
@@ -461,6 +490,10 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			{
 				//cout << s << endl;
 				s = string(buf, 0, bytesReceived);
+
+				if (s == "end") {
+					break;
+				}
 				if (s.length() == 96) {
 					StringToLocation(s);
 					//SetAll(data_ar);
@@ -518,25 +551,7 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 }
 
 
-void Wait(SDL_Event* e, SDL_Texture* arr) {
-	bool run = true;
 
-	while (run) {
-		while (SDL_PollEvent(&game_event) != 0) {
-			if (game_event.key.keysym.sym == SDLK_RETURN) {
-				SDL_Delay(150);
-				run = false;
-				//exit(0);
-			}
-			else if (game_event.type==SDL_QUIT) {
-				exit(0);
-			}
-		}
-
-		RendertoLocc(Game_Renderer, arr, 0, 0, WIDTH, HEIGHT);
-		SDL_RenderPresent(Game_Renderer);
-	}
-}
 
 
 
@@ -723,11 +738,11 @@ int main(int argc, char* argv[]) {
 	Summoner.SummonFromMap("map.txt", TextureHash);
 	Summoner.SummonAll(AllFinElements);
 
-	Wait(&game_event, ShowImages[5]);
+	//Wait(&game_event, ShowImages[5]);
 
-	Wait(&game_event, ShowImages[4]);
+	//Wait(&game_event, ShowImages[4]);
 
-	Wait(&game_event, ShowImages[8]);
+	//Wait(&game_event, ShowImages[8]);
 
 	
 
@@ -779,11 +794,11 @@ int main(int argc, char* argv[]) {
 	int playernum = 1;
 	
 	const char* message;
-	int l = 3;
+	int l = 2;
 
-	string str_obj("madarchod");
+	/*string str_obj("madarchod");
 	message = &str_obj[0];
-	send(sock, message, strlen(message), 0);
+	send(sock, message, strlen(message), 0);*/
 
 	while (l--) {
 
@@ -793,61 +808,18 @@ int main(int argc, char* argv[]) {
 		string str_obj("start");
 		message = &str_obj[0];
 		send(sock, message, strlen(message), 0);
-		while (recv(sock, buf, sizeof(buf), 0) == 0) {
-			continue;
-		}
 		
+		char buff[1024];
+		int beet = recv(sock, buff, sizeof(buff), 0);
+
+		while (string(buff,0,beet).substr(0,6)!="start" + to_string(playernum-1) ){
+			beet = recv(sock, buff, sizeof(buff), 0);
+			//continue;%
+		}
+
+
 		GameRun(game_event, playernum, game_font, TextureHash);
 
-		sort(players.begin(), players.end());
-		reverse(players.begin(), players.end());
-		SDL_RenderClear(Game_Renderer);
-		//SDL_SetRenderDrawColor(Game_Renderer, 255, 0, 0, 255);
-
-		vector<Texture*> pnames_textures;
-		for (int i = 0; i < players.size(); i++) {
-			Texture* pname = new Texture();
-			string lk = to_string(i + 1) + ". " + get<1>(players[i]);
-			if (get<1>(players[i]).size() < 18) {
-				for (int k = 0; k < 22 - get<1>(players[i]).size(); k++) {
-					lk += " ";
-				}
-			}
-			pname->LoadText(game_font, game_textcolor, lk);
-			pnames_textures.push_back(pname);
-		}
-
-		vector<Texture*> pscore_textures;
-		for (int i = 0; i < players.size(); i++) {
-			Texture* pscore_texture = new Texture();
-			pscore_texture->LoadText(game_font, game_textcolor, to_string(get<0>(players[i])));
-			pscore_textures.push_back(pscore_texture);
-		}
-
-		SDL_Rect rec = { 0,0,400,40 };
-		SDL_Rect recc = { 0,0,50,40 };
-
-		RendertoLocc(Game_Renderer, ShowImages[6], 0, 0, WIDTH, HEIGHT);
-		for (int i = 0; i < players.size(); i++) {
-			pnames_textures[i]->Render(350, 100 + (i + 1) * 40, 0.0, SDL_FLIP_NONE, &rec, NULL);
-			pscore_textures[i]->Render(850, 100 + (i + 1) * 40, 0.0, SDL_FLIP_NONE, &recc, NULL);
-		}
-
-		bool run = true;
-		while (run) {
-			while (SDL_PollEvent(&game_event) != 0) {
-				if (game_event.key.keysym.sym == SDLK_RETURN) {
-					SDL_Delay(150);
-					run = false;
-					//exit(0);
-				}
-				else if (game_event.type == SDL_QUIT) {
-					exit(0);
-				}
-			}
-
-			SDL_RenderPresent(Game_Renderer);
-		}
 
 
 		SDL_RenderClear(Game_Renderer);
@@ -856,6 +828,57 @@ int main(int argc, char* argv[]) {
 		Summoner.SummonAll(AllFinElements);
 		Ash::points = 0;
 		playernum++;
+	}
+
+
+	sort(players.begin(), players.end());
+	reverse(players.begin(), players.end());
+	SDL_RenderClear(Game_Renderer);
+	//SDL_SetRenderDrawColor(Game_Renderer, 255, 0, 0, 255);
+
+	vector<Texture*> pnames_textures;
+	for (int i = 0; i < players.size(); i++) {
+		Texture* pname = new Texture();
+		string lk = to_string(i + 1) + ". " + get<1>(players[i]);
+		if (get<1>(players[i]).size() < 18) {
+			for (int k = 0; k < 22 - get<1>(players[i]).size(); k++) {
+				lk += " ";
+			}
+		}
+		pname->LoadText(game_font, game_textcolor, lk);
+		pnames_textures.push_back(pname);
+	}
+
+	vector<Texture*> pscore_textures;
+	for (int i = 0; i < players.size(); i++) {
+		Texture* pscore_texture = new Texture();
+		pscore_texture->LoadText(game_font, game_textcolor, to_string(get<0>(players[i])));
+		pscore_textures.push_back(pscore_texture);
+	}
+
+	SDL_Rect rec = { 0,0,400,40 };
+	SDL_Rect recc = { 0,0,50,40 };
+
+	RendertoLocc(Game_Renderer, ShowImages[6], 0, 0, WIDTH, HEIGHT);
+	for (int i = 0; i < players.size(); i++) {
+		pnames_textures[i]->Render(350, 100 + (i + 1) * 40, 0.0, SDL_FLIP_NONE, &rec, NULL);
+		pscore_textures[i]->Render(850, 100 + (i + 1) * 40, 0.0, SDL_FLIP_NONE, &recc, NULL);
+	}
+
+	run = true;
+	while (run) {
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.key.keysym.sym == SDLK_RETURN) {
+				SDL_Delay(150);
+				run = false;
+				//exit(0);
+			}
+			else if (game_event.type == SDL_QUIT) {
+				exit(0);
+			}
+		}
+
+		SDL_RenderPresent(Game_Renderer);
 	}
 	
 	
