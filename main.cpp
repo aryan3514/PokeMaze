@@ -1,78 +1,138 @@
 #include <iostream>
 #include <vector>
-#include <bits/stdc++.h>
-#define ll long long
-#define ull unsigned long long
-#define  in(ar,n) for(int i=0;i<(int)n;i++)cin>>ar[i];
-#define out(ar,n)     for(int i=0;i<(int)n;i++)     cout<<ar[i]<<" ";     cout<<endl;
-#define for2d(n,m) for(int i=0;i<(int)n;i++)for(int j=0;j<(int)m;j++)
-#define fori(i,a,b) for(ll i=a;i<(int)b;++i)
-#define all(ar) ar.begin(),ar.end()
-#define fastio ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
-#define disp(x) cout << #x << " = " << x << endl;
-#define um unordered_map
-#define INF 1000000000
+#include <WS2tcpip.h>
+#include <string>
+#include <bitset>
+#pragma comment(lib,"ws2_32.lib")
+
+#define NUM_PLAYERS 2
+
 using namespace std;
-typedef pair<ll,ll> pll;
-typedef pair<int,int> pii;
-typedef vector<int> vi;
-typedef vector<vector<int>> vvi;
-using namespace std;
-// const ll mod = 1e9 + 7;
 
-bool sortbysec(const pair<int,int> &a,
-              const pair<int,int> &b)
-{   
-    if (a.second == b.second){
-        return a.first < b.first;
-    }
-    return (a.second > b.second);
-}
+WSADATA wsa;
+SOCKET s;
+SOCKET all_sockets[NUM_PLAYERS];
+struct sockaddr_in server, client;
+int c;
 
- 
-int main(){
- 
-    ll t;
-    cin>>t;
+int main() {
+	printf("\nInitialising Winsock...");
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		//return 1;
+	}
 
-    while(t--){
-        ll n;
-        cin>>n;
+	printf("Initialised.\n");
 
-        ll ar[n];
+	server.sin_family = AF_INET;
+	string ipAddress = "127.0.0.1";
+	inet_pton(AF_INET, ipAddress.c_str(), &server.sin_addr);
+	server.sin_port = htons(8888);
 
-        in(ar,n);
-
-        vector<pll> vec;
-
-        fori(i,0,n){
-            vec.push_back(pll (ar[i],i+1));
-        }
-
-        sort(all(vec));
-        ll ans = 0;
-        fori(i,0,n){
-            fori(j,i+1,n){
-
-                //cout<<(vec[i].first)*(vec[j].first)<<" ";
-                //cout<<vec[i].second + vec[j].second<<endl;
-
-                if (vec[i].first*vec[j].first>=2*n){
-                    break;
-                }else if ((vec[i].first)*(vec[j].first) == vec[i].second + vec[j].second){
-                    ans++;
-                }
-            }
-
-        }
-        
-        cout<<ans<<endl;
-    }
-
-    
-    
+	int t = NUM_PLAYERS;
 
 
+		if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+		{
+			printf("Could not create socket : %d", WSAGetLastError());
+		}
 
-    
+		printf("Socket created.\n");
+	
+
+	//Prepare the sockaddr_in structure
+	
+   
+	if (bind(s, (struct sockaddr*)&server, sizeof(server)) == SOCKET_ERROR)
+	{
+		printf("Bind failed with error code : %d", WSAGetLastError());
+	}
+
+	puts("Bind done");
+
+	listen(s, 3);
+
+
+	//Accept and incoming connection
+	puts("Waiting for incoming connections...");
+
+	c = sizeof(struct sockaddr_in);
+
+	int num_player = 0;
+	const char* message = "";
+
+	while (num_player<t) {
+		all_sockets[num_player] = accept(s, (struct sockaddr*)&client, &c);
+		cout << "Connection" << num_player + 1 << " accepted" << endl;
+		string str_obj(bitset<4>(num_player+1).to_string());
+		message = &str_obj[0];
+		send(all_sockets[num_player], message, strlen(message), 0);
+		num_player++;
+	}
+
+	char buffarr[NUM_PLAYERS][1024];
+	int start = 0;
+	num_player = 0;
+	
+	
+
+	int i = 0;
+	while (i<t) {
+
+		for (int j = 0; j < t; j++) {
+			int b = recv(all_sockets[j], buffarr[j], 1024, 0);
+			
+			while (string(buffarr[j], 0, b).substr(0,5)!="start") {
+				b = recv(all_sockets[j], buffarr[j], 1024, 0);
+			}
+		}
+		cout << "Aryan" << endl;
+
+		for (int j = 0; j < t; j++) {
+			string str_obj(string("start" + to_string(i)));
+			message = &str_obj[0];
+			send(all_sockets[j], message, strlen(message), 0);
+		}
+
+		cout << "connections done" << endl;
+		cout << "weiting" << endl;
+		int brec = recv(all_sockets[i], buffarr[i], 1024, 0);
+		cout << "data rec" << string(buffarr[i], 0, brec)<<endl;
+		while (brec != 0) {
+			//cout << string(buffarr[i], 0, brec) << endl;
+			if (string(buffarr[i], 0, brec)=="end") {
+				for (int j = 0; j < t; j++) {
+					if (j == i) continue;
+					string str_obj(string(buffarr[i], 0, brec));
+					message = &str_obj[0];
+					//cout << strlen(message) << endl;
+					send(all_sockets[j], message, strlen(message), 0);
+				}
+				break;
+			}
+
+			for (int j = 0; j < t; j++) {
+				if (j == i) continue;
+				string str_obj(string(buffarr[i], 0, brec));
+				message = &str_obj[0];
+				//cout << strlen(message) << endl;
+				send(all_sockets[j], message, strlen(message), 0);
+			}
+			brec = recv(all_sockets[i], buffarr[i], 1024, 0);
+		}
+		i++;
+	}
+
+	/*num_player = 0;
+
+	while (num_player < t) {
+		string str_obj(bitset<4>(num_player + 1).to_string());
+		message = &str_obj[0];
+		send(all_sockets[num_player], message, strlen(message), 0);
+		num_player++;
+	}*/
+	
+
+	cout << "end of pirogrem" << endl;
 }
