@@ -36,7 +36,11 @@ using namespace std;
 const int WIDTH = 1250;
 const int HEIGHT = 800;
 
+bool ONLINE = true;
+
 vector <tuple<int, string >> players;
+
+SDL_Texture* ShowImages[10];
 
 SDL_Window* Game_Window = NULL;
 SDL_Renderer* Game_Renderer = NULL;
@@ -313,7 +317,7 @@ void NameAndIntro(SDL_Event game_event,  int playernum, TTF_Font* game_font, map
 	
 	
 	
-	if (myplayernum != playernum) {
+	if ((myplayernum != playernum) && ONLINE) {
 		Wait(&game_event, ShowImages[1]);
 		players.push_back(tuple<int, string>(0, "online_player"));
 		return;
@@ -423,12 +427,14 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 	bool zoroark_on = false;
 	bool squirtle_on = false;
 
+	bool isDone = false;
+
 
 	SDL_Texture* BigTexArray[4];
-	BigTexArray[0] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("bigsquirtle.bmp"));
-	BigTexArray[1] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("bigpuff.bmp"));
-	BigTexArray[2] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("bigzor.bmp"));
-	BigTexArray[3] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("biggastly.bmp"));
+	BigTexArray[0] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/skins/bigsquirtle.bmp"));
+	BigTexArray[1] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/skins/bigpuff.bmp"));
+	BigTexArray[2] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/skins/bigzor.bmp"));
+	BigTexArray[3] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/skins/biggastly.bmp"));
 
 
 	int data_ar[16];
@@ -441,7 +447,6 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 	char* message;
 
 	
-
 	while (run2) {
 
 
@@ -478,9 +483,12 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			send(sock, message, strlen(message), 0);
 
 
+			
 			for (int i = 0; i < AllFinElements.size(); i++) {
 				AllFinElements[i]->Refresh();
-				//AllFinElements[i]->Render();
+				if (AllFinElements[i]->isPokeball()) {
+					isDone = true;
+				}
 			}
 		}
 		else
@@ -514,7 +522,7 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 
 
 
-		if (Game_Matrix.FindAsh() == NULL) {
+		if (Game_Matrix.FindAsh() == NULL || !isDone) {
 			string str_obj("end");
 			message = &str_obj[0];
 			send(sock, message, strlen(message), 0);
@@ -529,7 +537,6 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 		AbilityAction(&Game_Matrix,squirtle_timer, jpuff_timer, zoroark_timer, gastly_timer,squirtle_on, jpuff_on, zoroark_on, gastly_on);
 		SDL_RenderClear(Game_Renderer);
 		CheckAbilityTime(&Game_Matrix, AllTextures, BigTexArray, squirtle_timer, jpuff_timer, zoroark_timer,gastly_timer, squirtle_on, jpuff_on, zoroark_on, gastly_on, 5 + ability_boost/100 );
-
 
 
 
@@ -551,7 +558,18 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 }
 
 
-
+void LoadImagesinBulk() {
+	ShowImages[0] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/m.bmp"));
+	ShowImages[1] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/pol.bmp"));
+	ShowImages[2] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/skins/pik.bmp"));
+	ShowImages[3] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("biggastly.bmp"));
+	ShowImages[4] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/1.bmp"));
+	ShowImages[5] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/2.bmp"));
+	ShowImages[6] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/3.bmp"));
+	ShowImages[7] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/4.bmp"));
+	ShowImages[8] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/5.bmp"));
+	ShowImages[9] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/6.bmp"));
+}
 
 
 
@@ -596,37 +614,35 @@ int main(int argc, char* argv[]) {
 	map<string, Texture*> TextureHash;
 	
 	Texture* wall_texture = new Texture();
-	wall_texture->LoadImageFromPath("wall.bmp");
+	wall_texture->LoadImageFromPath("resources/skins/wall.bmp");
 
 	Texture* ash_texture = new Texture();
-	ash_texture->LoadImageFromPath("ash.bmp");
+	ash_texture->LoadImageFromPath("resources/skins/ash.bmp");
 
 	Texture* gastly_texture = new Texture();
-	gastly_texture->LoadImageFromPath("gastly.bmp");
+	gastly_texture->LoadImageFromPath("resources/skins/gastly.bmp");
 
 	Texture* pokeball_texture = new Texture();
-	pokeball_texture->LoadImageFromPath("pokeball.bmp");
+	pokeball_texture->LoadImageFromPath("resources/skins/pokeball.bmp");
 
 	Texture* zoroark_texture = new Texture();
-	zoroark_texture->LoadImageFromPath("zoroark.bmp");
+	zoroark_texture->LoadImageFromPath("resources/skins/zoroark.bmp");
 	 
 	Texture* squirtle_texture = new Texture();
-	squirtle_texture->LoadImageFromPath("squirtle.bmp");
+	squirtle_texture->LoadImageFromPath("resources/skins/squirtle.bmp");
 
 	Texture* jigglypuff_texture = new Texture();
-	jigglypuff_texture->LoadImageFromPath("jigglypuff.bmp");
+	jigglypuff_texture->LoadImageFromPath("resources/skins/jigglypuff.bmp");
 
 	Texture* monster_texture = new Texture();
-	monster_texture->LoadImageFromPath("monster.bmp");
+	monster_texture->LoadImageFromPath("resources/skins/monster.bmp");
 
 	
 
 	Element::Element_Matrix = &Game_Matrix;
 	
 
-	
 
-	printf("\nInitialising Winsock...");
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
 		printf("Failed. Error Code : %d", WSAGetLastError());
@@ -646,9 +662,6 @@ int main(int argc, char* argv[]) {
 	//Prepare the sockaddr_in structure
 	string ipAddress = "127.0.0.1";
 
-
-
-	
 	sockaddr_in hint;
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(8888);
@@ -687,18 +700,9 @@ int main(int argc, char* argv[]) {
 
 
 	
-
-	SDL_Texture* ShowImages[10];
-	ShowImages[0] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("m.bmp"));
-	ShowImages[1] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("pol.bmp"));
-	ShowImages[2] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("pik.bmp"));
-	ShowImages[3] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("biggastly.bmp"));
-	ShowImages[4] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("1.bmp"));
-	ShowImages[5] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("2.bmp"));
-	ShowImages[6] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("3.bmp"));
-	ShowImages[7] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("4.bmp"));
-	ShowImages[8] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("5.bmp"));
-	ShowImages[9] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("6.bmp"));
+	LoadImagesinBulk();
+	
+	
 
 	
 
@@ -738,67 +742,21 @@ int main(int argc, char* argv[]) {
 	Summoner.SummonFromMap("map.txt", TextureHash);
 	Summoner.SummonAll(AllFinElements);
 
-	//Wait(&game_event, ShowImages[5]);
+	Wait(&game_event, ShowImages[5]);
 
-	//Wait(&game_event, ShowImages[4]);
+	Wait(&game_event, ShowImages[4]);
 
-	//Wait(&game_event, ShowImages[8]);
-
-	
-
-	/*int iResult;
-	u_long iMode = 1;
-	iResult = ioctlsocket(new_socket, FIONBIO, &iMode);*/
+	Wait(&game_event, ShowImages[8]);
 
 	
 
-	//SDL_PollEvent(&game_event);
 
-
-
-
-	/*char* message;
-
-	bool runs = true; bool runc = true;
-
-	/*while (runs) {
-
-		if (playernum == 2) {
-			int bytesReceived = recv(new_socket, buf, 4096, 0);
-			if (bytesReceived > 0)
-			{
-				ss = string(buf, 0, bytesReceived);
-				game_event = StringToKeyEvent(ss);
-
-				if (game_event.key.keysym.sym == SDLK_RETURN) {
-					runs = false;
-				}
-			}
-		}
-		else
-		{
-
-			while (SDL_PollEvent(&game_event) != 0) {
-				if (game_event.key.keysym.sym == SDLK_RETURN) {
-					runs = false;
-					//exit(0);
-				}
-			}
-
-			string str_obj(KeyEventtoString(game_event));
-			message = &str_obj[0];
-			send(new_socket, message, strlen(message), 0);
-
-		}
-	}*/
 	int playernum = 1;
 	
 	const char* message;
 	int l = 2;
 
-	/*string str_obj("madarchod");
-	message = &str_obj[0];
-	send(sock, message, strlen(message), 0);*/
+
 
 	while (l--) {
 
@@ -884,17 +842,6 @@ int main(int argc, char* argv[]) {
 	
 
 
-	/*RendertoLoc(Game_Renderer, "m.bmp", 0, 0, WIDTH, HEIGHT);
-	RendertoLoc(Game_Renderer, "pol.bmp", 200, 100, 800, 200);
-	RendertoLoc(Game_Renderer, "pik.bmp", 450, 400, 400, 300);*/
-
-	
-	
-
-	
-	//run2 = true;
-	//NameAndIntro(game_event, 2, game_font, TextureHash, ShowImages);
-	//GameRun(game_event,  2, game_font, TextureHash);
 	
 	closesocket(sock);
 	WSACleanup();
