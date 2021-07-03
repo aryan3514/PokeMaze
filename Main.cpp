@@ -36,17 +36,17 @@ using namespace std;
 const int WIDTH = 1250;
 const int HEIGHT = 800;
 
-bool ONLINE = true;
 
 vector <tuple<int, string >> players;
 
-SDL_Texture* ShowImages[10];
+SDL_Texture* ShowImages[11];
 
 SDL_Window* Game_Window = NULL;
 SDL_Renderer* Game_Renderer = NULL;
 SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* Game_s = NULL;
 SDL_Texture* Tex = NULL;
+TTF_Font* game_font;
 
 Matrix Game_Matrix(30, 30);
 
@@ -100,8 +100,8 @@ void StringToLocation(string s) {
 	int arr[16];
 
 	for (int i = 0; i < 4; i++) {
-		arr[0 + 2*i] = stoi(s.substr(0 + 24*i, 12), 0, 2);
-		arr[1 + 2*i] = stoi(s.substr(12 + 24*i, 12), 0, 2);
+		arr[0 + 2 * i] = stoi(s.substr(0 + 24 * i, 12), 0, 2);
+		arr[1 + 2 * i] = stoi(s.substr(12 + 24 * i, 12), 0, 2);
 		//arr[2 + 4*i] = stoi(s.substr(24 + 36*i, 6), 0, 2);
 		//arr[3 + 4*i] = stoi(s.substr(30 + 36*i, 6), 0, 2);
 	}
@@ -116,7 +116,7 @@ void StringToLocation(string s) {
 			AllFinElements[i]->GetMonsterFromElements()->position.x = arr[2 * k];
 			AllFinElements[i]->GetMonsterFromElements()->position.y = arr[2 * k + 1];
 			//AllFinElements[i]->GetMonsterFromElements()->nextunit = Game_Matrix.GetUnitFromMatrix(arr[4 * k + 2], arr[4 * k + 3]);
-				
+
 				//pos.x = arr[4 * k + 2];
 			//AllFinElements[i]->GetMonsterFromElements()->curunit->pos.y = arr[4 * k + 3];
 			k++;
@@ -147,7 +147,7 @@ void RendertoLocc(SDL_Renderer* Game_Renderer, SDL_Texture* teex, int x, int y, 
 	rectangle.w = w;
 	rectangle.h = h;
 	//SDL_Surface* tempsur = SDL_LoadBMP(loc);
-	
+
 	//SDL_SetTextureBlendMode(Teex, SDL_BLENDMODE_BLEND);
 	//SDL_SetTextureAlphaMod(Teex, 50);
 	SDL_RenderCopy(Game_Renderer, teex, NULL, &rectangle);
@@ -163,22 +163,22 @@ void RendertoSide(SDL_Renderer* Game_Renderer, SDL_Texture* loc) {
 	RendertoLocc(Game_Renderer, loc, 1090, 330, 150, 150);
 	//RendertoLoc(Game_Renderer, loc, 1090, 10, 150, 150);
 	RendertoLocc(Game_Renderer, loc, 1090, 160, 150, 150);
-	RendertoLocc(Game_Renderer, loc , 1090, 500, 150, 150);
+	RendertoLocc(Game_Renderer, loc, 1090, 500, 150, 150);
 	//RendertoLoc(Game_Renderer, loc, 1090, 650, 150, 150);
 }
 
 
 
 
-void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer,bool &s, bool &j, bool &g, bool &z) {
+void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool& s, bool& j, bool& g, bool& z) {
 
 	if (Game_Matrix->FindAsh()->squrtle) {
 
 		//RendertoSide(Game_Renderer, "bigsquirtle.bmp");
-	
+
 		//SDL_RenderPresent(Game_Renderer);
 
-		
+
 		Game_Matrix->FindAsh()->squrtle = false;
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
@@ -189,7 +189,7 @@ void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_ti
 		s = true;
 		time(&squirtle_timer);
 	}
-	
+
 	if (Game_Matrix->FindAsh()->gastly) {
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
@@ -199,12 +199,12 @@ void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_ti
 			}
 		}
 		g = true;
-		time(&gastly_timer) ;
+		time(&gastly_timer);
 	}
-	 
+
 	if (Game_Matrix->FindAsh()->jpuff) {
 
-		
+
 
 		for (int i = 0; i < AllFinElements.size(); i++) {
 			if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
@@ -216,7 +216,7 @@ void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_ti
 		j = true;
 		time(&jpuff_timer);
 	}
-	
+
 	if (Game_Matrix->FindAsh()->zoroark) {
 
 		for (int i = 0; i < AllFinElements.size(); i++) {
@@ -234,20 +234,20 @@ void AbilityAction(Matrix* Game_Matrix, time_t& squirtle_timer, time_t& jpuff_ti
 
 
 
-void CheckAbilityTime(Matrix* Game_Matrix, map<string, Texture*> AllTextures , SDL_Texture*  ar[], time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool &s, bool &j, bool &g, bool &z, double timelimit) {
+void CheckAbilityTime(Matrix* Game_Matrix, map<string, Texture*> AllTextures, SDL_Texture* ar[], time_t& squirtle_timer, time_t& jpuff_timer, time_t& zoroark_timer, time_t& gastly_timer, bool& s, bool& j, bool& g, bool& z, double timelimit) {
 	time_t endt;
 
 	if (s) {
-		if (difftime(time(&endt), squirtle_timer) >= 2*timelimit) {
+		if (difftime(time(&endt), squirtle_timer) >= 2 * timelimit) {
 			//exit(0);
-			Summoner.SummonOneMonster(0, 0, AllTextures, AllFinElements,"monster" );
-			
+			Summoner.SummonOneMonster(0, 0, AllTextures, AllFinElements, "monster");
+
 			s = false;
 		}
 		else {
 			RendertoSide(Game_Renderer, ar[0]);
 		}
-		
+
 	}
 
 	if (j) {
@@ -313,18 +313,18 @@ void Wait(SDL_Event* e, SDL_Texture* arr) {
 	}
 }
 
-void NameAndIntro(SDL_Event game_event,  int playernum, TTF_Font* game_font, map<string, Texture*> AllTextures, SDL_Texture* ShowImages[]) {
-	
-	
-	
-	if ((myplayernum != playernum) && ONLINE) {
-		Wait(&game_event, ShowImages[1]);
+void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<string, Texture*> AllTextures, SDL_Texture* ShowImages[]) {
+
+
+
+	if ((myplayernum != playernum)) {
+		Wait(&game_event, ShowImages[10]);
 		players.push_back(tuple<int, string>(0, "online_player"));
 		return;
 	}
-	
-	
-	
+
+
+
 	string inputText = "Enter your name : ";
 	string player_name = "";
 
@@ -338,18 +338,16 @@ void NameAndIntro(SDL_Event game_event,  int playernum, TTF_Font* game_font, map
 
 	bool run = true;
 	SDL_Rect NameVals = { 0,0, 400, 50 };
-	
+
 	RendertoLocc(Game_Renderer, ShowImages[0], 0, 0, WIDTH, HEIGHT);
 	RendertoLocc(Game_Renderer, ShowImages[1], 200, 50, 800, 200);
 	RendertoLocc(Game_Renderer, ShowImages[2], 450, 400, 400, 300);
 
 	instr_texture->Render(300, 300, 0.0, SDL_FLIP_NONE, &NameVals, NULL);
-	
+
 	while (run) {
 
 		SDL_RenderPresent(Game_Renderer);
-
-		
 
 		SDL_Rect PalVals = { 0,0, player_name.length() * 20, 50 };
 
@@ -410,16 +408,16 @@ void NameAndIntro(SDL_Event game_event,  int playernum, TTF_Font* game_font, map
 	players.push_back(tuple<int, string>(0, player_name));
 }
 
-void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<string, Texture*> AllTextures) {
+void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<string, Texture*> AllTextures) {
 
 	SDL_Rect ScoreVals = { 0,0, 350, 30 };
 	Texture* score_texture = new Texture();
 
 	bool run2 = true;
-	
+
 	time_t squirtle_timer;
-	time_t jpuff_timer ;
-	time_t zoroark_timer ;
+	time_t jpuff_timer;
+	time_t zoroark_timer;
 	time_t gastly_timer;
 
 	bool jpuff_on = false;
@@ -441,12 +439,12 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 
 	char buf[1024];
 	string userInput;
-	
+
 	string s = "";
 
 	char* message;
 
-	
+
 	while (run2) {
 
 
@@ -464,10 +462,10 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			}
 		}
 
-		
-		
 
-		if (playernum==myplayernum) {
+
+
+		if (playernum == myplayernum) {
 			while (SDL_PollEvent(&game_event) != 0) {
 				if (game_event.type == SDL_QUIT) {
 					run2 = false;
@@ -483,7 +481,7 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			send(sock, message, strlen(message), 0);
 
 
-			
+
 			for (int i = 0; i < AllFinElements.size(); i++) {
 				AllFinElements[i]->Refresh();
 				if (AllFinElements[i]->isPokeball()) {
@@ -493,6 +491,7 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 		}
 		else
 		{
+			isDone = true;
 			int bytesReceived = recv(sock, buf, 1024, 0);
 			if (bytesReceived > 0)
 			{
@@ -512,13 +511,13 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 					}
 				}
 
-				
+
 
 			}
 
 		}
 
-		
+
 
 
 
@@ -530,13 +529,13 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			break;
 		}
 
-		get<0> (players[playernum-1]) = Ash::points;
+		get<0>(players[playernum - 1]) = Ash::points;
 
-		int ability_boost = get<0>(players[playernum-1]);
-		
-		AbilityAction(&Game_Matrix,squirtle_timer, jpuff_timer, zoroark_timer, gastly_timer,squirtle_on, jpuff_on, zoroark_on, gastly_on);
+		int ability_boost = get<0>(players[playernum - 1]);
+
+		AbilityAction(&Game_Matrix, squirtle_timer, jpuff_timer, zoroark_timer, gastly_timer, squirtle_on, jpuff_on, zoroark_on, gastly_on);
 		SDL_RenderClear(Game_Renderer);
-		CheckAbilityTime(&Game_Matrix, AllTextures, BigTexArray, squirtle_timer, jpuff_timer, zoroark_timer,gastly_timer, squirtle_on, jpuff_on, zoroark_on, gastly_on, 5 + ability_boost/100 );
+		CheckAbilityTime(&Game_Matrix, AllTextures, BigTexArray, squirtle_timer, jpuff_timer, zoroark_timer, gastly_timer, squirtle_on, jpuff_on, zoroark_on, gastly_on, 5 + ability_boost / 100);
 
 
 
@@ -545,10 +544,10 @@ void GameRun(SDL_Event game_event, int playernum,  TTF_Font* game_font, map<stri
 			AllFinElements[i]->Render();
 		}
 
-	
 
-		score_texture->LoadText(game_font, game_textcolor, to_string(myplayernum)+ get<1>(players[playernum-1]) + "'s score : " + to_string(get<0>(players[playernum-1])));
-		score_texture->Render(200, 15,0.0, SDL_FLIP_NONE, &ScoreVals, NULL);
+
+		score_texture->LoadText(game_font, game_textcolor, to_string(myplayernum) + get<1>(players[playernum - 1]) + "'s score : " + to_string(get<0>(players[playernum - 1])));
+		score_texture->Render(200, 15, 0.0, SDL_FLIP_NONE, &ScoreVals, NULL);
 		//score_texture->LoadText(game_font, game_textcolor, player2_name + "'s score : " + to_string(player2_score));
 		//score_texture->Render(470 + 200, 15, 0.0 , SDL_FLIP_NONE, &ScoreVals,  NULL);
 		SDL_RenderPresent(Game_Renderer);
@@ -569,35 +568,29 @@ void LoadImagesinBulk() {
 	ShowImages[7] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/4.bmp"));
 	ShowImages[8] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/5.bmp"));
 	ShowImages[9] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/6.bmp"));
+	ShowImages[10] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/7.bmp"));
 }
 
 
-
-
-
-int main(int argc, char* argv[]) {
-
-	
-	
+void Initialise() {
 
 
 	TTF_Init();
 
-	
 
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-		return 0;
+		exit(0);
 	}
 
 
-	TTF_Font* game_font = TTF_OpenFont("C:/Users/91887/Desktop/COP Final/renbow.ttf", 35);
+	game_font = TTF_OpenFont("C:/Users/91887/Desktop/COP Final/renbow.ttf", 35);
 
 	if (game_font == NULL) {
-		return 0;
+		exit(0);
 	}
-	
+
 	Game_Window = SDL_CreateWindow("Pokemon", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
 	if (Game_Window == NULL) {
@@ -610,9 +603,10 @@ int main(int argc, char* argv[]) {
 		cout << "HEY< ERROR" << endl;
 	}
 	Texture::Renderer = Game_Renderer;
-	
-	map<string, Texture*> TextureHash;
-	
+}
+
+
+void LoadAllTextures(map<string, Texture*>& TextureHash, bool ash) {
 	Texture* wall_texture = new Texture();
 	wall_texture->LoadImageFromPath("resources/skins/wall.bmp");
 
@@ -627,7 +621,7 @@ int main(int argc, char* argv[]) {
 
 	Texture* zoroark_texture = new Texture();
 	zoroark_texture->LoadImageFromPath("resources/skins/zoroark.bmp");
-	 
+
 	Texture* squirtle_texture = new Texture();
 	squirtle_texture->LoadImageFromPath("resources/skins/squirtle.bmp");
 
@@ -637,12 +631,20 @@ int main(int argc, char* argv[]) {
 	Texture* monster_texture = new Texture();
 	monster_texture->LoadImageFromPath("resources/skins/monster.bmp");
 
-	
+	if (ash) ash_texture->LoadImageFromPath("ash.bmp");
+	else ash_texture->LoadImageFromPath("misty.bmp");
 
-	Element::Element_Matrix = &Game_Matrix;
-	
+	TextureHash.insert(pair<string, Texture*>("wall", wall_texture));
+	TextureHash.insert(pair<string, Texture*>("ash", ash_texture));
+	TextureHash.insert(pair<string, Texture*>("gastly", gastly_texture));
+	TextureHash.insert(pair<string, Texture*>("pokeball", pokeball_texture));
+	TextureHash.insert(pair<string, Texture*>("zoroark", zoroark_texture));
+	TextureHash.insert(pair<string, Texture*>("squirtle", squirtle_texture));
+	TextureHash.insert(pair<string, Texture*>("jigglypuff", jigglypuff_texture));
+	TextureHash.insert(pair<string, Texture*>("monster", monster_texture));
+}
 
-
+void LoadAndConnectToClient() {
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
 		printf("Failed. Error Code : %d", WSAGetLastError());
@@ -667,7 +669,6 @@ int main(int argc, char* argv[]) {
 	hint.sin_port = htons(8888);
 	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
 
-
 	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
 
 	if (connResult == SOCKET_ERROR)
@@ -675,120 +676,14 @@ int main(int argc, char* argv[]) {
 		cerr << "Can't connect to server, Err #" << WSAGetLastError() << endl;
 		closesocket(sock);
 		WSACleanup();
-		return 0;
+		exit(0);
 	}
 
 	cout << "Connected" << endl;
+}
 
 
-	char buf[1024];
-	string userInput;
-
-	string ss = "";
-
-	int bytes_rec;
-	while (true)
-	{
-		bytes_rec = recv(sock, buf, 1024, 0);
-		if (bytes_rec > 0) {
-			ss = string(buf, 0, bytes_rec);
-			break;
-		}
-	}
-	
-	myplayernum = stoi(ss, 0, 2);
-
-
-	
-	LoadImagesinBulk();
-	
-	
-
-	
-
-	Wait(&game_event, ShowImages[7]);
-
-	bool run = true;
-	bool ash = true;
-	while (run) {
-		while (SDL_PollEvent(&game_event) != 0) {
-			if (game_event.key.keysym.sym == SDLK_RETURN || game_event.key.keysym.sym == SDLK_a) {
-				SDL_Delay(150);
-				run = false;
-				//exit(0);
-			}
-			else if (game_event.key.keysym.sym == SDLK_m) {
-				ash = false;;
-				SDL_Delay(150);
-				run = false;
-			}
-		}
-
-		RendertoLocc(Game_Renderer, ShowImages[9], 0, 0, WIDTH, HEIGHT);
-		SDL_RenderPresent(Game_Renderer);
-	}
-
-	if (ash) ash_texture->LoadImageFromPath("ash.bmp");
-	else ash_texture->LoadImageFromPath("misty.bmp");
-
-	TextureHash.insert(pair<string, Texture*>("wall", wall_texture));
-	TextureHash.insert(pair<string, Texture*>("ash", ash_texture));
-	TextureHash.insert(pair<string, Texture*>("gastly", gastly_texture));
-	TextureHash.insert(pair<string, Texture*>("pokeball", pokeball_texture));
-	TextureHash.insert(pair<string, Texture*>("zoroark", zoroark_texture));
-	TextureHash.insert(pair<string, Texture*>("squirtle", squirtle_texture));
-	TextureHash.insert(pair<string, Texture*>("jigglypuff", jigglypuff_texture));
-	TextureHash.insert(pair<string, Texture*>("monster", monster_texture));
-	Summoner.SummonFromMap("map.txt", TextureHash);
-	Summoner.SummonAll(AllFinElements);
-
-	Wait(&game_event, ShowImages[5]);
-
-	Wait(&game_event, ShowImages[4]);
-
-	Wait(&game_event, ShowImages[8]);
-
-	
-
-
-	int playernum = 1;
-	
-	const char* message;
-	int l = 2;
-
-
-
-	while (l--) {
-
-		
-		NameAndIntro(game_event, playernum, game_font, TextureHash, ShowImages);
-		
-		string str_obj("start");
-		message = &str_obj[0];
-		send(sock, message, strlen(message), 0);
-		
-		char buff[1024];
-		int beet = recv(sock, buff, sizeof(buff), 0);
-
-		while (string(buff,0,beet).substr(0,6)!="start" + to_string(playernum-1) ){
-			beet = recv(sock, buff, sizeof(buff), 0);
-			//continue;%
-		}
-
-
-		GameRun(game_event, playernum, game_font, TextureHash);
-
-
-
-		SDL_RenderClear(Game_Renderer);
-		Summoner.EmptyAll();
-		Summoner.SummonFromMap("map.txt", TextureHash);
-		Summoner.SummonAll(AllFinElements);
-		Ash::points = 0;
-		playernum++;
-	}
-
-
+void PostGameDisplay() {
 	sort(players.begin(), players.end());
 	reverse(players.begin(), players.end());
 	SDL_RenderClear(Game_Renderer);
@@ -823,7 +718,7 @@ int main(int argc, char* argv[]) {
 		pscore_textures[i]->Render(850, 100 + (i + 1) * 40, 0.0, SDL_FLIP_NONE, &recc, NULL);
 	}
 
-	run = true;
+	bool run = true;
 	while (run) {
 		while (SDL_PollEvent(&game_event) != 0) {
 			if (game_event.key.keysym.sym == SDLK_RETURN) {
@@ -838,10 +733,114 @@ int main(int argc, char* argv[]) {
 
 		SDL_RenderPresent(Game_Renderer);
 	}
-	
-	
+}
 
 
+
+
+
+int main(int argc, char* argv[]) {
+
+
+
+	Initialise();
+
+
+	Element::Element_Matrix = &Game_Matrix;
+
+	LoadAndConnectToClient();
+
+
+	char buf[1024];
+	string userInput;
+
+	string ss = "";
+
+	int bytes_rec;
+	while (true)
+	{
+		bytes_rec = recv(sock, buf, 1024, 0);
+		if (bytes_rec > 0) {
+			ss = string(buf, 0, bytes_rec);
+			break;
+		}
+	}
+
+	myplayernum = stoi(ss, 0, 2);
+
+
+	LoadImagesinBulk();
+
+	Wait(&game_event, ShowImages[7]);
+
+	bool run = true;
+	bool ash = true;
+	while (run) {
+		while (SDL_PollEvent(&game_event) != 0) {
+			if (game_event.key.keysym.sym == SDLK_RETURN || game_event.key.keysym.sym == SDLK_a) {
+				SDL_Delay(150);
+				run = false;
+				//exit(0);
+			}
+			else if (game_event.key.keysym.sym == SDLK_m) {
+				ash = false;;
+				SDL_Delay(150);
+				run = false;
+			}
+		}
+
+		RendertoLocc(Game_Renderer, ShowImages[9], 0, 0, WIDTH, HEIGHT);
+		SDL_RenderPresent(Game_Renderer);
+	}
+	map<string, Texture*> TextureHash;
+
+	LoadAllTextures(TextureHash, ash);
+
+	Summoner.SummonFromMap("map.txt", TextureHash);
+	Summoner.SummonAll(AllFinElements);
+
+	Wait(&game_event, ShowImages[5]);
+
+	Wait(&game_event, ShowImages[4]);
+
+	Wait(&game_event, ShowImages[8]);
+
+
+	int playernum = 1;
+
+	const char* message;
+	int l = 2;
+
+	while (l--) {
+
+
+		NameAndIntro(game_event, playernum, game_font, TextureHash, ShowImages);
+
+		string str_obj("start");
+		message = &str_obj[0];
+		send(sock, message, strlen(message), 0);
+
+		char buff[1024];
+		int beet = recv(sock, buff, sizeof(buff), 0);
+
+		while (string(buff, 0, beet).substr(0, 6) != "start" + to_string(playernum - 1)) {
+			beet = recv(sock, buff, sizeof(buff), 0);
+			//continue;%
+		}
+
+		GameRun(game_event, playernum, game_font, TextureHash);
+
+
+
+		SDL_RenderClear(Game_Renderer);
+		Summoner.EmptyAll();
+		Summoner.SummonFromMap("map.txt", TextureHash);
+		Summoner.SummonAll(AllFinElements);
+		Ash::points = 0;
+		playernum++;
+	}
+
+	PostGameDisplay();
 	
 	closesocket(sock);
 	WSACleanup();
