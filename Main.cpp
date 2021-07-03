@@ -59,6 +59,8 @@ SDL_Color game_textcolor = { 255,255, 255 };
 
 SDL_Event game_event;
 
+bool ONLINE = false;
+
 WSADATA wsa;
 SOCKET sock;
 struct sockaddr_in server, client;
@@ -317,7 +319,7 @@ void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<
 
 
 
-	if ((myplayernum != playernum)) {
+	if ((myplayernum != playernum) && ONLINE) {
 		Wait(&game_event, ShowImages[10]);
 		players.push_back(tuple<int, string>(0, "online_player"));
 		return;
@@ -476,10 +478,13 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 				}
 			}
 
-			string str_obj(LocationToString());
-			message = &str_obj[0];
-			send(sock, message, strlen(message), 0);
+			if (ONLINE) {
+				string str_obj(LocationToString());
+				message = &str_obj[0];
+				send(sock, message, strlen(message), 0);
+			}
 
+			
 
 
 			for (int i = 0; i < AllFinElements.size(); i++) {
@@ -522,9 +527,12 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 
 
 		if (Game_Matrix.FindAsh() == NULL || !isDone) {
-			string str_obj("end");
-			message = &str_obj[0];
-			send(sock, message, strlen(message), 0);
+			if (ONLINE) {
+				string str_obj("end");
+				message = &str_obj[0];
+				send(sock, message, strlen(message), 0);
+			}
+			
 			SDL_RenderClear(Game_Renderer);
 			break;
 		}
@@ -684,6 +692,36 @@ void LoadAndConnectToClient() {
 
 
 void PostGameDisplay() {
+
+	if (ONLINE) {
+		string str_obj("player" + get<1>(players[myplayernum - 1]) + to_string(get<0>(players[myplayernum - 1])));
+		char* message = &str_obj[0];
+		//cout << strlen(message) << endl;
+		send(sock, message, strlen(message), 0);
+
+		players.erase(players.begin(), players.end());
+		char buff[1024];
+		int beet = recv(sock, buff, sizeof(buff), 0);
+		while (string(buff, 0, beet).substr(0, 3) != "end") {
+			if (string(buff, 0, beet).substr(0, 6) == "player") {
+				string sre = string(buff, 0, beet);
+				string name = "online_player";
+				int score = 0;
+				for (int i = 6; i < sre.length(); i++) {
+					if (isdigit(sre.at(i))) {
+						name = (sre.substr(6, i - 6));
+						score = stoi(sre.substr(i, sre.length() - i));
+						break;
+					}
+				}
+				players.push_back(tuple<int, string>(score, name));
+			}
+			int beet = recv(sock, buff, sizeof(buff), 0);
+		}
+	}
+	
+	
+
 	sort(players.begin(), players.end());
 	reverse(players.begin(), players.end());
 	SDL_RenderClear(Game_Renderer);
@@ -748,25 +786,30 @@ int main(int argc, char* argv[]) {
 
 	Element::Element_Matrix = &Game_Matrix;
 
-	LoadAndConnectToClient();
+	if (ONLINE) {
+		LoadAndConnectToClient();
 
+		char buf[1024];
+		string userInput;
 
-	char buf[1024];
-	string userInput;
+		string ss = "";
 
-	string ss = "";
-
-	int bytes_rec;
-	while (true)
-	{
-		bytes_rec = recv(sock, buf, 1024, 0);
-		if (bytes_rec > 0) {
-			ss = string(buf, 0, bytes_rec);
-			break;
+		int bytes_rec;
+		while (true)
+		{
+			bytes_rec = recv(sock, buf, 1024, 0);
+			if (bytes_rec > 0) {
+				ss = string(buf, 0, bytes_rec);
+				break;
+			}
 		}
-	}
 
-	myplayernum = stoi(ss, 0, 2);
+		myplayernum = stoi(ss, 0, 2);
+	}
+	
+
+
+	
 
 
 	LoadImagesinBulk();
@@ -816,17 +859,26 @@ int main(int argc, char* argv[]) {
 
 		NameAndIntro(game_event, playernum, game_font, TextureHash, ShowImages);
 
-		string str_obj("start");
-		message = &str_obj[0];
-		send(sock, message, strlen(message), 0);
+		if (ONLINE) {
+			string str_obj("start");
+			message = &str_obj[0];
+			send(sock, message, strlen(message), 0);
 
-		char buff[1024];
-		int beet = recv(sock, buff, sizeof(buff), 0);
+			char buff[1024];
+			int beet = recv(sock, buff, sizeof(buff), 0);
 
-		while (string(buff, 0, beet).substr(0, 6) != "start" + to_string(playernum - 1)) {
-			beet = recv(sock, buff, sizeof(buff), 0);
-			//continue;%
+			while (string(buff, 0, beet).substr(0, 6) != "start" + to_string(playernum - 1)) {
+				beet = recv(sock, buff, sizeof(buff), 0);
+				//continue;%
+			}
 		}
+		else
+		{
+			myplayernum = playernum;
+		}
+		
+
+		
 
 		GameRun(game_event, playernum, game_font, TextureHash);
 
