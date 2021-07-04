@@ -5,7 +5,7 @@
 #include <bitset>
 #pragma comment(lib,"ws2_32.lib")
 
-#define NUM_PLAYERS 2
+#define NUM_PLAYERS 50
 
 using namespace std;
 
@@ -16,6 +16,11 @@ struct sockaddr_in server, client;
 int c;
 
 int main() {
+
+	cout << "Enter the number of players who want to connect to play the game : " << endl;
+	cout << "--Regards, Pokemon server--" << endl;
+	int t = 2;
+	cin >> t;
 	printf("\nInitialising Winsock...");
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -30,7 +35,7 @@ int main() {
 	inet_pton(AF_INET, ipAddress.c_str(), &server.sin_addr);
 	server.sin_port = htons(8888);
 
-	int t = NUM_PLAYERS;
+	//int t = NUM_PLAYERS;
 
 
 		if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
@@ -74,8 +79,25 @@ int main() {
 	char buffarr[NUM_PLAYERS][1024];
 	int start = 0;
 	num_player = 0;
+
+	//RECIEVE MAP
+	int mb  = recv(all_sockets[0], buffarr[0], 1024, 0);
+	string maps = string(buffarr[0], 0, mb);
+
+	cout << maps << endl;
+
+	for (int j = 1; j < t; j++) {
+		string str_obj(maps);
+		message = &str_obj[0];
+		send(all_sockets[j], message, strlen(message), 0);
+	}
 	
 	
+	for (int j = 0; j < t; j++) {
+		string str_obj(string("p" + to_string(t)));
+		message = &str_obj[0];
+		send(all_sockets[j], message, strlen(message), 0);
+	}
 
 	int i = 0;
 	while (i<t) {
@@ -87,7 +109,7 @@ int main() {
 				b = recv(all_sockets[j], buffarr[j], 1024, 0);
 			}
 		}
-		cout << "Aryan" << endl;
+		cout << "Started" << endl;
 
 		for (int j = 0; j < t; j++) {
 			string str_obj(string("start" + to_string(i)));
@@ -100,7 +122,7 @@ int main() {
 		int brec = recv(all_sockets[i], buffarr[i], 1024, 0);
 		cout << "data rec" << string(buffarr[i], 0, brec)<<endl;
 		while (brec != 0) {
-			//cout << string(buffarr[i], 0, brec) << endl;
+			cout << string(buffarr[i], 0, brec) << endl;
 			if (string(buffarr[i], 0, brec)=="end") {
 				for (int j = 0; j < t; j++) {
 					if (j == i) continue;
@@ -124,6 +146,43 @@ int main() {
 		i++;
 	}
 
+	vector<pair<int,string>> players;
+	for (int j = 0; j < t; j++) {
+		int b = recv(all_sockets[j], buffarr[j], 1024, 0);
+
+		while (string(buffarr[j], 0, b).at(0) != 'p') {
+			b = recv(all_sockets[j], buffarr[j], 1024, 0);
+		}
+
+		string sre = string(buffarr[j], 0, b);
+		cout << sre << endl;
+		string name = "online_player";
+		int score = 0;
+		for (int i = 6; i < sre.length(); i++) {
+			if ((sre.at(i)=='|')) {
+				name = (sre.substr(1, i-1));
+				score = stoi(sre.substr(i+1, sre.length() - i-1));
+			}
+		}
+
+		players.push_back(pair<int, string>(score, name));
+	}
+
+	for (int j = 0; j < t; j++) {
+		for (int i = 0; i < players.size(); i++) {
+			string str_obj("p" + players[i].second +"|" + to_string(players[i].first));
+			cout << "p" + players[i].second + "|" + to_string(players[i].first) << endl;
+			message = &str_obj[0];
+			//cout << strlen(message) << endl;
+			send(all_sockets[j], message, strlen(message), 0);
+		}
+
+		string str_obj("end");
+		message = &str_obj[0];
+		send(all_sockets[j], message, strlen(message), 0);
+
+	}
+
 	/*num_player = 0;
 
 	while (num_player < t) {
@@ -135,4 +194,5 @@ int main() {
 	
 
 	cout << "end of pirogrem" << endl;
+
 }
