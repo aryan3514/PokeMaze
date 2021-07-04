@@ -84,6 +84,8 @@ string LocationToString() {
 	//s += (bitset<6>(tx)).to_string();
 	//s += (bitset<6>(ty)).to_string();
 
+
+
 	for (int i = 0; i < AllFinElements.size(); i++) {
 		if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
 			int mx = AllFinElements[i]->GetMonsterFromElements()->position.x;
@@ -97,34 +99,35 @@ string LocationToString() {
 		}
 	}
 
+	
 	return s;
 
 }
 
 void StringToLocation(string s) {
 
-	int arr[16];
+	int arr[16] = {-1};
+	int l = s.length();
 
-	for (int i = 0; i < 4; i++) {
+
+	for (int i = 0; i < l/24; i++) {
 		arr[0 + 2 * i] = stoi(s.substr(0 + 24 * i, 12), 0, 2);
 		arr[1 + 2 * i] = stoi(s.substr(12 + 24 * i, 12), 0, 2);
-		//arr[2 + 4*i] = stoi(s.substr(24 + 36*i, 6), 0, 2);
-		//arr[3 + 4*i] = stoi(s.substr(30 + 36*i, 6), 0, 2);
 	}
 	Game_Matrix.FindAsh()->position.x = arr[0];
 	Game_Matrix.FindAsh()->position.y = arr[1];
-	//Game_Matrix.FindAsh()->curunit->pos.x = arr[2];
-	//Game_Matrix.FindAsh()->curunit->pos.y = arr[3];
+	
 
 	int k = 1;
 	for (int i = 0; i < AllFinElements.size(); i++) {
 		if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+
+			if (arr[2 * k] == -1) {
+				AllFinElements[i]->GetMonsterFromElements()->Remove();
+				continue;
+			}
 			AllFinElements[i]->GetMonsterFromElements()->position.x = arr[2 * k];
 			AllFinElements[i]->GetMonsterFromElements()->position.y = arr[2 * k + 1];
-			//AllFinElements[i]->GetMonsterFromElements()->nextunit = Game_Matrix.GetUnitFromMatrix(arr[4 * k + 2], arr[4 * k + 3]);
-
-				//pos.x = arr[4 * k + 2];
-			//AllFinElements[i]->GetMonsterFromElements()->curunit->pos.y = arr[4 * k + 3];
 			k++;
 		}
 	}
@@ -510,7 +513,7 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 				if (s == "end") {
 					break;
 				}
-				if (s.length() == 96) {
+				if (s.length() <= 96 && s.length()>=24) {
 					StringToLocation(s);
 					//SetAll(data_ar);
 
@@ -590,15 +593,19 @@ void Initialise() {
 	TTF_Init();
 
 	int t;
-	cout << "-------------------------------------------------------" << endl;
+	cout << "----------------------------------------------------------------------------------------" << endl;
 	cout << "Do you want to play the game online [0] / offline [1] (default) ? " << endl;
-	cout << "-------------------------------------------------------" << endl;
+	//cout << "-------------------------------------------------------" << endl;
 	cout << "(Warning : If you choose the online mode, make sure that the server is running, and it is accepting connections right now! )" << endl;
-	cout << "-------------------------------------------------------" << endl;
-	cout << "Enter \"0\" for online mode or \"1\" for offline mode : " << endl;
-	cout << "-------------------------------------------------------" << endl;
+	cout <<  endl;
+	cout <<endl;
+	cout << "Enter \"0\" for online mode or \"1\" for offline mode ! (without the double quotes) " << endl;
+	cout  << endl;
+	cout <<  endl;
 	cout << "(If you enter anything other than 0 or 1, the game will run in the offline mode)" << endl;;
-	cout << "-------------------------------------------------------" << endl;
+	cout << "----------------------------------------------------------------------------------------" << endl;
+	cout << endl;
+	cout << endl;
 	cout << "Waiting for input : ";
 	cin >> t;
 	if (t == 0) {
@@ -874,7 +881,7 @@ int main(int argc, char* argv[]) {
 					ss = string(buf, 0, bytes_rec);
 					ofstream MyFile("map.txt");
 
-					for (int i = 0; i < 30; i++) {
+					for (int i = 0; i < 23; i++) {
 						MyFile << ss.substr(30*i,30);
 						MyFile << "\n";
 					}
