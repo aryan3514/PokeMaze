@@ -25,6 +25,8 @@ public:
 
 	virtual bool isAsh();
 
+	virtual bool isPokeball();
+
 	virtual bool isMonster();
 
 	virtual Monster* GetMonsterFromElements();

@@ -9,6 +9,7 @@
 #include "Squirtle.h"
 #include "Wall.h"
 #include "Gastly.h"
+#include "Maze.h"
 #include "Monster.h"
 #include "JigglyPuff.h"
 #include "Matrix.h"
@@ -50,6 +51,8 @@ TTF_Font* game_font;
 
 Matrix Game_Matrix(30, 30);
 
+Maze Game_Maze;
+
 Summon Summoner(&Game_Matrix);
 
 vector <Element*> AllFinElements;
@@ -60,6 +63,7 @@ SDL_Color game_textcolor = { 255,255, 255 };
 SDL_Event game_event;
 
 bool ONLINE = false;
+int OFFLINE_PLAYER_NUMBER = 2;
 
 WSADATA wsa;
 SOCKET sock;
@@ -554,7 +558,7 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 
 
 
-		score_texture->LoadText(game_font, game_textcolor, to_string(myplayernum) + get<1>(players[playernum - 1]) + "'s score : " + to_string(get<0>(players[playernum - 1])));
+		score_texture->LoadText(game_font, game_textcolor, get<1>(players[playernum - 1]) + "'s score : " + to_string(get<0>(players[playernum - 1])));
 		score_texture->Render(200, 15, 0.0, SDL_FLIP_NONE, &ScoreVals, NULL);
 		//score_texture->LoadText(game_font, game_textcolor, player2_name + "'s score : " + to_string(player2_score));
 		//score_texture->Render(470 + 200, 15, 0.0 , SDL_FLIP_NONE, &ScoreVals,  NULL);
@@ -585,6 +589,30 @@ void Initialise() {
 
 	TTF_Init();
 
+	int t;
+	cout << "-------------------------------------------------------" << endl;
+	cout << "Do you want to play the game online [0] / offline [1] (default) ? " << endl;
+	cout << "-------------------------------------------------------" << endl;
+	cout << "(Warning : If you choose the online mode, make sure that the server is running, and it is accepting connections right now! )" << endl;
+	cout << "-------------------------------------------------------" << endl;
+	cout << "Enter \"0\" for online mode or \"1\" for offline mode : " << endl;
+	cout << "-------------------------------------------------------" << endl;
+	cout << "(If you enter anything other than 0 or 1, the game will run in the offline mode)" << endl;;
+	cout << "-------------------------------------------------------" << endl;
+	cout << "Waiting for input : ";
+	cin >> t;
+	if (t == 0) {
+		ONLINE = true;
+	}
+	else
+	{
+		ONLINE = false;
+		int n;
+		cout << "Enter the number of players : ";
+		cin >> n;
+		OFFLINE_PLAYER_NUMBER = n;
+	}
+
 
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
@@ -592,12 +620,19 @@ void Initialise() {
 		exit(0);
 	}
 
+	
 
-	game_font = TTF_OpenFont("C:/Users/91887/Desktop/COP Final/renbow.ttf", 35);
+
+	game_font = TTF_OpenFont("resources/font/renbow.ttf", 35);
+
+	
 
 	if (game_font == NULL) {
+		cout << "HI" << endl;
 		exit(0);
 	}
+
+	
 
 	Game_Window = SDL_CreateWindow("Pokemon", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 
@@ -639,8 +674,8 @@ void LoadAllTextures(map<string, Texture*>& TextureHash, bool ash) {
 	Texture* monster_texture = new Texture();
 	monster_texture->LoadImageFromPath("resources/skins/monster.bmp");
 
-	if (ash) ash_texture->LoadImageFromPath("ash.bmp");
-	else ash_texture->LoadImageFromPath("misty.bmp");
+	if (ash) ash_texture->LoadImageFromPath("resources/skins/ash.bmp");
+	else ash_texture->LoadImageFromPath("resources/skins/misty.bmp");
 
 	TextureHash.insert(pair<string, Texture*>("wall", wall_texture));
 	TextureHash.insert(pair<string, Texture*>("ash", ash_texture));
@@ -694,7 +729,7 @@ void LoadAndConnectToClient() {
 void PostGameDisplay() {
 
 	if (ONLINE) {
-		string str_obj("player" + get<1>(players[myplayernum - 1]) + to_string(get<0>(players[myplayernum - 1])));
+		string str_obj("p" + get<1>(players[myplayernum - 1]) +"|"+ to_string(get<0>(players[myplayernum - 1])));
 		char* message = &str_obj[0];
 		//cout << strlen(message) << endl;
 		send(sock, message, strlen(message), 0);
@@ -702,15 +737,17 @@ void PostGameDisplay() {
 		players.erase(players.begin(), players.end());
 		char buff[1024];
 		int beet = recv(sock, buff, sizeof(buff), 0);
+
+
 		while (string(buff, 0, beet).substr(0, 3) != "end") {
-			if (string(buff, 0, beet).substr(0, 6) == "player") {
+			if (string(buff, 0, beet).at(0) == 'p') {
 				string sre = string(buff, 0, beet);
 				string name = "online_player";
 				int score = 0;
-				for (int i = 6; i < sre.length(); i++) {
-					if (isdigit(sre.at(i))) {
-						name = (sre.substr(6, i - 6));
-						score = stoi(sre.substr(i, sre.length() - i));
+				for (int i = 1; i < sre.length(); i++) {
+					if ((sre.at(i))=='|') {
+						name = (sre.substr(1, i - 1));
+						score = stoi(sre.substr(i+1, sre.length() - i-1));
 						break;
 					}
 				}
@@ -730,7 +767,7 @@ void PostGameDisplay() {
 	vector<Texture*> pnames_textures;
 	for (int i = 0; i < players.size(); i++) {
 		Texture* pname = new Texture();
-		string lk = to_string(i + 1) + ". " + get<1>(players[i]);
+		string lk = to_string(i + 1)+ ". " + get<1>(players[i]);
 		if (get<1>(players[i]).size() < 18) {
 			for (int k = 0; k < 22 - get<1>(players[i]).size(); k++) {
 				lk += " ";
@@ -779,12 +816,17 @@ void PostGameDisplay() {
 
 int main(int argc, char* argv[]) {
 
-
-
+	srand(time(0));
+	
 	Initialise();
 
 
 	Element::Element_Matrix = &Game_Matrix;
+	
+	Game_Maze.GenerateLabryinth(rand()%23, rand()%23);
+	
+	Game_Maze.StoreMaze();
+
 
 	if (ONLINE) {
 		LoadAndConnectToClient();
@@ -805,11 +847,50 @@ int main(int argc, char* argv[]) {
 		}
 
 		myplayernum = stoi(ss, 0, 2);
+
+		if (myplayernum == 1) {
+
+			string mez = "";
+			string myText = "";
+			ifstream MyReadFile("map.txt");
+
+			// Use a while loop together with the getline() function to read the file line by line
+			while (getline(MyReadFile, myText)) {
+				mez += myText;
+				//mez += "/n";
+			}
+
+			// Close the file
+			MyReadFile.close();
+			string str_obj(mez);
+			const char* mesz = &str_obj[0];
+			send(sock, mesz, strlen(mesz), 0);
+		}
+		else {
+			while (true)
+			{
+				bytes_rec = recv(sock, buf, 1024, 0);
+				if (bytes_rec > 0) {
+					ss = string(buf, 0, bytes_rec);
+					ofstream MyFile("map.txt");
+
+					for (int i = 0; i < 30; i++) {
+						MyFile << ss.substr(30*i,30);
+						MyFile << "\n";
+					}
+					//MyFile << ss;
+
+					MyFile.close();
+					break;
+				}
+			}
+
+			
+		}
+
 	}
 	
 
-
-	
 
 
 	LoadImagesinBulk();
@@ -847,13 +928,22 @@ int main(int argc, char* argv[]) {
 	Wait(&game_event, ShowImages[4]);
 
 	Wait(&game_event, ShowImages[8]);
+	int l = OFFLINE_PLAYER_NUMBER;
+	const char* message;
+	char buff[1024];
+	if (ONLINE) {
+		
+		int bet = recv(sock, buff, sizeof(buff), 0);
 
+		while (string(buff, 0, bet).at(0) != 'p') {
+			bet = recv(sock, buff, sizeof(buff), 0);
+		}
 
+		l = stoi(string(buff, 0, bet).substr(1, string(buff, 0, bet).length() - 1));
+	}
 	int playernum = 1;
 
-	const char* message;
-	int l = 2;
-
+	
 	while (l--) {
 
 
@@ -878,7 +968,6 @@ int main(int argc, char* argv[]) {
 		}
 		
 
-		
 
 		GameRun(game_event, playernum, game_font, TextureHash);
 

@@ -24,6 +24,10 @@ void Element::Remove(){
 
 void Element::ViewRefresh() {}
 
+bool Element::isPokeball() {
+	return false;
+}
+
 bool Element::isAsh() {
 	return false;
 }

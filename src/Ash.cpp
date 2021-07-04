@@ -125,11 +125,11 @@ bool Ash::LoadSound()
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
-    ankita = Mix_LoadWAV("ank.wav");
-    SquirtleSound = Mix_LoadWAV("squirtle.wav");
-    JigglyPuffSound = Mix_LoadWAV("jigglypuff.wav");
-    GastlySound = Mix_LoadWAV("gastly.wav");
-    ZoroarkSound = Mix_LoadWAV("zoroark.wav");
+  
+    SquirtleSound = Mix_LoadWAV("resources/sounds/squirtle.wav");
+    JigglyPuffSound = Mix_LoadWAV("resources/sounds/jigglypuff.wav");
+    GastlySound = Mix_LoadWAV("resources/sounds/gastly.wav");
+    ZoroarkSound = Mix_LoadWAV("resources/sounds/zoroark.wav");
 
     if (SquirtleSound == NULL || JigglyPuffSound == NULL || GastlySound == NULL || ZoroarkSound == NULL) {
         return false;

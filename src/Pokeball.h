@@ -28,5 +28,7 @@ class Pokeball : public Element {
 
     Unit* GetCurUnit();
 
+    bool isPokeball();
+
     SDL_Point GetPos();
 };
