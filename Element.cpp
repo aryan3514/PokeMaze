@@ -7,15 +7,15 @@ Matrix* Element::Element_Matrix = NULL;
 
 
 void Element::HandleKeys(SDL_Event* event) {
-	cout << "HandleKeys was not overriden" << endl;
+	//cout << "HandleKeys was not overriden" << endl;
 }
 
 void Element::Refresh() {
-	cout << "Refresh was not overriden" << endl;
+	//cout << "Refresh was not overriden" << endl;
 }
 
 void Element::Render() {
-	cout << "Render was not overriden" << endl;
+	//cout << "Render was not overriden" << endl;
 }
 
 void Element::Remove(){
