@@ -21,14 +21,14 @@ int main() {
 	cout << "--Regards, Pokemon server--" << endl;
 	int t = 2;
 	cin >> t;
-	printf("\nInitialising Winsock...");
+
+	cout << ("\nInitialising Winsock.......") << endl;;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		printf("Failed. Error Code : %d", WSAGetLastError());
-		//return 1;
+		printf("Failed.");
 	}
 
-	printf("Initialised.\n");
+	cout<<("Initialised.")<<endl;
 
 	server.sin_family = AF_INET;
 	string ipAddress = "127.0.0.1";
@@ -38,15 +38,13 @@ int main() {
 	//int t = NUM_PLAYERS;
 
 
-		if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
-		{
-			printf("Could not create socket : %d", WSAGetLastError());
-		}
+	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+	{
+		printf("Could not create socket : %d", WSAGetLastError());
+	}
 
-		printf("Socket created.\n");
+	cout << ("Socket has been created.") << endl;;
 	
-
-	//Prepare the sockaddr_in structure
 	
    
 	if (bind(s, (struct sockaddr*)&server, sizeof(server)) == SOCKET_ERROR)
@@ -54,22 +52,21 @@ int main() {
 		printf("Bind failed with error code : %d", WSAGetLastError());
 	}
 
-	puts("Bind done");
+	cout << ("Bind done") << endl;;
 
-	listen(s, 3);
+	listen(s, SOMAXCONN);
 
-
-	//Accept and incoming connection
-	puts("Waiting for incoming connections...");
+	cout << ("Waiting for incoming connections from players...") << endl;;
 
 	c = sizeof(struct sockaddr_in);
 
 	int num_player = 0;
 	const char* message = "";
 
+	//ACCEPTS CONNECTIONS FROM THE PLAYERS
 	while (num_player<t) {
 		all_sockets[num_player] = accept(s, (struct sockaddr*)&client, &c);
-		cout << "Connection" << num_player + 1 << " accepted" << endl;
+		cout << "Connection number " << num_player + 1 << " accepted" << endl;
 		string str_obj(bitset<4>(num_player+1).to_string());
 		message = &str_obj[0];
 		send(all_sockets[num_player], message, strlen(message), 0);
@@ -80,11 +77,11 @@ int main() {
 	int start = 0;
 	num_player = 0;
 
-	//RECIEVE MAP
+	//RECIEVEs MAP
 	int mb  = recv(all_sockets[0], buffarr[0], 1024, 0);
 	string maps = string(buffarr[0], 0, mb);
 
-	cout << maps << endl;
+	//cout << maps << endl;
 
 	for (int j = 1; j < t; j++) {
 		string str_obj(maps);
@@ -99,6 +96,8 @@ int main() {
 		send(all_sockets[j], message, strlen(message), 0);
 	}
 
+
+	//GAME DATA TRANSFER (MOST IMPORTANT)
 	int i = 0;
 	while (i<t) {
 
@@ -117,10 +116,16 @@ int main() {
 			send(all_sockets[j], message, strlen(message), 0);
 		}
 
-		cout << "connections done" << endl;
-		cout << "weiting" << endl;
+		cout << "All the connections are done !" << endl;
+		
+		cout << "Waiting for Data" << endl;
+		
 		int brec = recv(all_sockets[i], buffarr[i], 1024, 0);
-		cout << "data rec" << string(buffarr[i], 0, brec)<<endl;
+		//cout << "data rec" << string(buffarr[i], 0, brec)<<endl;
+
+
+		
+		
 		while (brec != 0) {
 			cout << string(buffarr[i], 0, brec) << endl;
 			if (string(buffarr[i], 0, brec)=="end") {
@@ -146,6 +151,8 @@ int main() {
 		i++;
 	}
 
+	//RECIEVES NAMES AND SCORE FROM ALL THE PLAYERS AFTER THE GAME ENDS
+
 	vector<pair<int,string>> players;
 	for (int j = 0; j < t; j++) {
 		int b = recv(all_sockets[j], buffarr[j], 1024, 0);
@@ -156,9 +163,9 @@ int main() {
 
 		string sre = string(buffarr[j], 0, b);
 		cout << sre << endl;
-		string name = "online_player";
+		string name = "player";
 		int score = 0;
-		for (int i = 6; i < sre.length(); i++) {
+		for (int i = 1; i < sre.length(); i++) {
 			if ((sre.at(i)=='|')) {
 				name = (sre.substr(1, i-1));
 				score = stoi(sre.substr(i+1, sre.length() - i-1));
@@ -167,6 +174,8 @@ int main() {
 
 		players.push_back(pair<int, string>(score, name));
 	}
+
+	//SEND THE DATA OF ALL THE PLAYERS TO ALL THE PLAYERS
 
 	for (int j = 0; j < t; j++) {
 		for (int i = 0; i < players.size(); i++) {
@@ -193,6 +202,6 @@ int main() {
 	}*/
 	
 
-	cout << "end of pirogrem" << endl;
+	cout << "End of Server Program. Thank You. " << endl;
 
 }
