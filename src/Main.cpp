@@ -354,6 +354,8 @@ void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<
 
 	instr_texture->Render(300, 300, 0.0, SDL_FLIP_NONE, &NameVals, NULL);
 
+	bool limit = true;
+
 	while (run) {
 
 		SDL_RenderPresent(Game_Renderer);
@@ -367,24 +369,23 @@ void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<
 			}
 			else if (game_event.key.keysym.sym == SDLK_BACKSPACE && player_name.length() > 0)
 			{
-				//lop off character
 				player_name.pop_back();
 				render_name = true;
 			}
-			else if (game_event.type == SDL_TEXTINPUT)
+			else if (game_event.type == SDL_TEXTINPUT && limit)
 			{
-				//Not copy or pasting
 				if (!(SDL_GetModState() & KMOD_CTRL && (game_event.text.text[0] == 'c' || game_event.text.text[0] == 'C' || game_event.text.text[0] == 'v' || game_event.text.text[0] == 'V')))
 				{
-					//Append character
 					player_name += game_event.text.text;
 					render_name = true;
 				}
 			}
 
+			if (player_name.length() > 9) limit = false;
+			else limit = true;
+
 			if (render_name)
 			{
-				//Text is not empty
 				if (inputText != "")
 				{
 					name_texture->LoadText(game_font, text_color, (player_name).c_str());
@@ -419,7 +420,7 @@ void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<
 
 void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<string, Texture*> AllTextures) {
 
-	SDL_Rect ScoreVals = { 0,0, 350, 30 };
+	SDL_Rect ScoreVals = { 0,0, 380, 30 };
 	Texture* score_texture = new Texture();
 
 	bool run2 = true;
@@ -531,8 +532,6 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 
 
 
-
-
 		if (Game_Matrix.FindAsh() == NULL || !isDone) {
 			if (ONLINE) {
 				string str_obj("end");
@@ -586,6 +585,23 @@ void LoadImagesinBulk() {
 	ShowImages[10] = SDL_CreateTextureFromSurface(Game_Renderer, SDL_LoadBMP("resources/screens/7.bmp"));
 }
 
+void print_instr() {
+	cout << "----------------------------------------------------------------------------------------" << endl;
+	cout << "Do you want to play the game online [0] / offline [1] (default) ? " << endl;
+	//cout << "-------------------------------------------------------" << endl;
+	cout << "(Warning : If you choose the online mode, make sure that the server is running, and it is accepting connections right now! )" << endl;
+	cout << endl;
+	cout << endl;
+	cout << "Enter \"0\" for online mode or \"1\" for offline mode ! (without the double quotes) " << endl;
+	cout << endl;
+	cout << endl;
+	cout << "(If you enter anything other than 0 or 1, the game will run in the offline mode)" << endl;;
+	cout << "----------------------------------------------------------------------------------------" << endl;
+	cout << endl;
+	cout << endl;
+	cout << "Waiting for input : ";
+}
+
 
 void Initialise() {
 
@@ -593,20 +609,7 @@ void Initialise() {
 	TTF_Init();
 
 	int t;
-	cout << "----------------------------------------------------------------------------------------" << endl;
-	cout << "Do you want to play the game online [0] / offline [1] (default) ? " << endl;
-	//cout << "-------------------------------------------------------" << endl;
-	cout << "(Warning : If you choose the online mode, make sure that the server is running, and it is accepting connections right now! )" << endl;
-	cout <<  endl;
-	cout <<endl;
-	cout << "Enter \"0\" for online mode or \"1\" for offline mode ! (without the double quotes) " << endl;
-	cout  << endl;
-	cout <<  endl;
-	cout << "(If you enter anything other than 0 or 1, the game will run in the offline mode)" << endl;;
-	cout << "----------------------------------------------------------------------------------------" << endl;
-	cout << endl;
-	cout << endl;
-	cout << "Waiting for input : ";
+	print_instr();
 	cin >> t;
 	if (t == 0) {
 		ONLINE = true;
@@ -742,25 +745,29 @@ void PostGameDisplay() {
 		send(sock, message, strlen(message), 0);
 
 		players.erase(players.begin(), players.end());
+		
 		char buff[1024];
 		int beet = recv(sock, buff, sizeof(buff), 0);
 
 
 		while (string(buff, 0, beet).substr(0, 3) != "end") {
+			cout << string(buff, 0, beet) << endl;
 			if (string(buff, 0, beet).at(0) == 'p') {
+				
 				string sre = string(buff, 0, beet);
-				string name = "online_player";
+				string name = "player";
 				int score = 0;
 				for (int i = 1; i < sre.length(); i++) {
 					if ((sre.at(i))=='|') {
 						name = (sre.substr(1, i - 1));
 						score = stoi(sre.substr(i+1, sre.length() - i-1));
+						players.push_back(tuple<int, string>(score, name));
 						break;
 					}
 				}
-				players.push_back(tuple<int, string>(score, name));
+				
 			}
-			int beet = recv(sock, buff, sizeof(buff), 0);
+			beet = recv(sock, buff, sizeof(buff), 0);
 		}
 	}
 	

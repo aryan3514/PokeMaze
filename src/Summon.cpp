@@ -17,6 +17,7 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 	int x = 0;
 	int y = 0;
 	
+	vector<Element*> tempmon; 
 	while (getline(File, it)) {
 		
 		for (int i = 0; i < it.size(); i++) {
@@ -50,15 +51,22 @@ bool Summon::SummonFromMap(string MapPath, map<string, Texture*> AllTextures  ) 
 				curel = new JigglyPuff(uni, AllTextures.find("jigglypuff")->second);
 			}
 
-			if (curel != NULL) {
+			if (curel != NULL && it[i] == 'm') tempmon.push_back(curel);
+			
+			if (curel != NULL && it[i]!='m') {
 				AllElements.push_back(curel);
 			}
+
 			/*else {
 				return false;
 			}*/
 		}
 		y++;
 	 }
+
+	for (int i = 0; i < tempmon.size(); i++) {
+		AllElements.push_back(tempmon[i]);
+	}
 	return true;
 
 }

@@ -57,7 +57,7 @@ Unit* Pokeball::GetCurUnit()
 
 void Pokeball::Render()
 {
-    ftexture->Render(position.x, position.y,0, SDL_FLIP_NONE);
+    ftexture->Render(position.x + 10, position.y + 10,0, SDL_FLIP_NONE);
 }
 
 bool Pokeball::isPokeball() {

@@ -286,12 +286,19 @@ void Monster::Refresh() {
                 curdir = UP;
             }
 
+            if (curunit->GetAsh() != NULL && !invincible) {
+                curunit->GetAsh()->Remove();
+                return;
+            }
+
             for (auto i : Element_Matrix->GetNeighbours(curunit)) {
                 if (i->GetAsh() != NULL && !invincible) {
                     i->GetAsh()->Remove();
                     //exit(0);
                     return;
                 }
+
+
             }
         }
 
