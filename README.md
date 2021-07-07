@@ -104,9 +104,24 @@ SDL2_mixer.lib
 22) The installation is now complete!
     
 
-## Execution
+### For Server Installation:
 
-1) After you complete the installation, click on **Local Windows Debugger** to build the project.
+1) Follow Step 1-3 given above and create another project for the Server.
+
+2)  Add the main.cpp file in the server to the project. (similar to step 8)
+
+## Execution 
+
+### Without Server Installation:
+1) Click on **Local Windows Debugger** to build the game project.
 
 2) The game will start running.
+
+### With Server Installation:
+1) First, run the server file by clicking on **Local Windows Debugger** in the Server Project.
+
+2) Now, run the **Local Windows Debugger** to build the game project (Ask all the players to run the game to connect).
+
+## Resources 
+
 
