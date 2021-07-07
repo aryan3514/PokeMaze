@@ -89,3 +89,24 @@ SDL2_mixer.lib
    
 19) Click on **Apply**. Click on **OK**.
 
+20) Now, open the project folder again. Go to the **Debug** folder.
+    
+    ![image](https://user-images.githubusercontent.com/78603679/124807090-099a2300-df7b-11eb-9bc3-e92c73bd8da8.png)
+    
+    
+21) Copy all the files in **sdl dll files** folder, and paste them in that Debug folder.
+
+(Note that if your project's name is "GameProject" then there will be two debug folders present :
+     1) **GameProject->Debug**
+     2) **GameProject->GameProject->Debug**
+     You need to paste the files into the Debug folder in the first option.)
+
+22) The installation is now complete!
+    
+
+## Execution
+
+1) After you complete the installation, click on **Local Windows Debugger** to build the project.
+
+2) The game will start running.
+
