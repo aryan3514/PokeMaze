@@ -115,6 +115,8 @@ SDL2_mixer.lib
 ### Without Server Installation:
 1) Click on **Local Windows Debugger** to build the game project.
 
+    ![image](https://user-images.githubusercontent.com/78603679/124822170-30615500-df8d-11eb-8757-8621c7efcadd.png)
+
 2) The game will start running.
 
 ### With Server Installation:
@@ -122,6 +124,23 @@ SDL2_mixer.lib
 
 2) Now, run the **Local Windows Debugger** to build the game project (Ask all the players to run the game to connect).
 
+
 ## Resources 
+
+1) https://lazyfoo.net/tutorials/SDL/
+
+2) https://github.com/DarkMuffinJoe/Pacman
+
+3) https://www.binarytides.com/winsock-socket-programming-tutorial/
+
+4) https://github.com/SirFourier/Maze-generator-and-solver
+
+5) https://stackoverflow.com/questions/60532245/implementing-a-recursive-backtracker-to-generate-a-maze
+
+6) Google Images (for skins), and Youtube (for sound effects)
+
+
+
+
 
 
