@@ -85,7 +85,7 @@ This project was created on Microsoft Visual Studio 2019 (x86) (on Windows 10).
 
 18) Go to **Additional Dependencies-> <Edit...>**.
 
-19) Paste the given contents in the space that appears. Click on **OK**.
+19) Paste the given contents in the space that appears. Click on **OK**. (the text given below is also given in sdl_all in copyme.txt)
 
 ``` 
 SDL2.lib
@@ -97,7 +97,9 @@ SDL2_mixer.lib
 
    ![image](https://user-images.githubusercontent.com/78603679/124664170-afd92080-dec8-11eb-832d-26f09e17ce30.png)
    
-20) Click on **Apply**. Click on **OK**.
+20) Click on **Apply**. Click on **OK**. 
+
+21) Click on **Local Windows Debugger** to build the project. You will encounter an error. We built the program just to get access to the **Debug** folder of the project.
 
 21) Now, open the project folder again. Go to the **Debug** folder.
     
