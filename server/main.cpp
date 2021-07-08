@@ -130,7 +130,7 @@ int main() {
 		
 		
 		while (brec != 0) {
-			cout << string(buffarr[i], 0, brec) << endl;
+			//cout << string(buffarr[i], 0, brec) << endl;
 			if (string(buffarr[i], 0, brec)=="end") {
 				for (int j = 0; j < t; j++) {
 					if (j == i) continue;
@@ -165,7 +165,7 @@ int main() {
 		}
 
 		string sre = string(buffarr[j], 0, b);
-		cout << sre << endl;
+		//cout << sre << endl;
 		string name = "player";
 		int score = 0;
 		for (int i = 1; i < sre.length(); i++) {
@@ -176,6 +176,7 @@ int main() {
 		}
 
 		players.push_back(pair<int, string>(score, name));
+		cout << "Player name : " + name + " , Player Score : " + to_string(score) << endl;
 	}
 
 	//SEND THE DATA OF ALL THE PLAYERS TO ALL THE PLAYERS
@@ -183,7 +184,7 @@ int main() {
 	for (int j = 0; j < t; j++) {
 		for (int i = 0; i < players.size(); i++) {
 			string str_obj("p" + players[i].second +"|" + to_string(players[i].first));
-			cout << "p" + players[i].second + "|" + to_string(players[i].first) << endl;
+			
 			message = &str_obj[0];
 			//cout << strlen(message) << endl;
 			send(all_sockets[j], message, strlen(message), 0);
