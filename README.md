@@ -1,12 +1,15 @@
 # Pokemon Themed Maze Style Game
 
+
+
+## Description
 This game is based on the famous anime show "Pokemon". All the characters used are from the same. 
 
 This game is made using SDL and its features, and it has been coded in C++ . (SDL, SDL IMAGE, SDL TTF, SDL MIXER)
 
-## Description
+All the rules of the game are given in the **Game Manual**!
 
-
+But since, you're **here**, I can drop you a secret hint. **Team Rocket is not that lazy.**
 
 
 
@@ -60,7 +63,7 @@ This project was created on Microsoft Visual Studio 2019 (on Windows 10).
     ![image](https://user-images.githubusercontent.com/78603679/124662648-bff00080-dec6-11eb-921d-521b1f4f47bd.png)
 
 
-13) When the browsing window opens up, go to **sdl_all-> include**. Click on **Select Folder**.
+13) When the browsing window opens up, go to **sdl_all-> include**. Click on **Select Folder**. (sdl_all is where all the necessary SDL tools were pooled in)
 
     ![image](https://user-images.githubusercontent.com/78603679/124663020-2a08a580-dec7-11eb-9453-f3e0448f538c.png)
 
@@ -78,7 +81,8 @@ This project was created on Microsoft Visual Studio 2019 (on Windows 10).
 
 18) Paste the given contents in the space that appears. Click on **OK**.
 
-``` SDL2.lib
+``` 
+SDL2.lib
 SDL2main.lib
 SDL2_image.lib
 SDL2_ttf.lib
@@ -137,7 +141,9 @@ SDL2_mixer.lib
 
 5) https://stackoverflow.com/questions/60532245/implementing-a-recursive-backtracker-to-generate-a-maze
 
-6) Google Images (for skins), and Youtube (for sound effects)
+6) Google Images (for skins), and Youtube (for sound effects) 
+
+**(I do not OWN THE RIGHTS of the skins and the sound effects used)**
 
 
 
