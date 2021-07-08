@@ -38,7 +38,7 @@ This project was created on Microsoft Visual Studio 2019 (x86) (on Windows 10).
 
 5) Download the code from this repository.
 
-6) Paste the folders you downloaded into the folder you opened earlier. (folders : src, resources, etc. ) (The name of my project is PokemonGame)
+6) Paste the folders you downloaded into the folder you opened earlier. (folders : src, resources, sdl_all ) (The name of my project is PokemonGame)
 
     ![g2](https://user-images.githubusercontent.com/78603679/124659690-dbf1a300-dec2-11eb-8d38-7e37783ecfd8.png)
     
