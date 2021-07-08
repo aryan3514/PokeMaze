@@ -3,6 +3,7 @@
 #include <WS2tcpip.h>
 #include <string>
 #include <bitset>
+
 #pragma comment(lib,"ws2_32.lib")
 
 #define NUM_PLAYERS 50
@@ -14,6 +15,8 @@ SOCKET s;
 SOCKET all_sockets[NUM_PLAYERS];
 struct sockaddr_in server, client;
 int c;
+
+
 
 int main() {
 
