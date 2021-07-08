@@ -166,7 +166,7 @@ void Ash::Refresh(){
         // SUS about the Check Collision Method's need.
         //if (CheckCollisionForTwo(arr, curunit->GetPokeball()->GetCollider())){
             //DELETE THE POKEBALL; DELETE YET TO BE IMPLEMENTED
-       //Mix_PlayChannel(-1, ankita, 0);
+
        
         curunit->GetPokeball()->Remove();
         points++;

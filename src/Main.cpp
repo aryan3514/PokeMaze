@@ -26,6 +26,7 @@
 #include<iostream>
 #include<string>
 #include <vector>
+#include <SDL_mixer.h>
 //using namespace std;
 
 
@@ -48,6 +49,9 @@ SDL_Surface* gScreenSurface = NULL;
 SDL_Surface* Game_s = NULL;
 SDL_Texture* Tex = NULL;
 TTF_Font* game_font;
+Mix_Chunk* opens = NULL;
+Mix_Chunk* deaths = NULL;
+Mix_Chunk* meowths = NULL;
 
 Matrix Game_Matrix(30, 30);
 
@@ -333,6 +337,7 @@ void NameAndIntro(SDL_Event game_event, int playernum, TTF_Font* game_font, map<
 	}
 
 
+	Mix_PlayChannel(-1, opens, 0);
 
 	string inputText = "Enter your name : ";
 	string player_name = "";
@@ -436,6 +441,7 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 	bool squirtle_on = false;
 
 	bool isDone = false;
+	bool fast = false;
 
 
 	SDL_Texture* BigTexArray[4];
@@ -476,6 +482,22 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 
 
 		if (playernum == myplayernum) {
+
+			int x = ((double)rand() / (RAND_MAX)) * 100;
+
+			if (Ash::points > 50 + x && !squirtle_on && !fast) {
+
+				if (!fast) Mix_PlayChannel(-1, meowths, 0);
+
+				for (int i = 0; i < AllFinElements.size(); i++) {
+					if (AllFinElements[i]->GetMonsterFromElements() != NULL) {
+						AllFinElements[i]->GetMonsterFromElements()->speed = 2;
+					}
+				}
+
+				fast = true;
+			}
+
 			while (SDL_PollEvent(&game_event) != 0) {
 				if (game_event.type == SDL_QUIT) {
 					run2 = false;
@@ -494,7 +516,7 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 
 			
 
-
+			isDone = false;
 			for (int i = 0; i < AllFinElements.size(); i++) {
 				AllFinElements[i]->Refresh();
 				if (AllFinElements[i]->isPokeball()) {
@@ -512,6 +534,8 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 				s = string(buf, 0, bytesReceived);
 
 				if (s == "end") {
+					Mix_PlayChannel(-1, deaths, 0);
+					SDL_RenderClear(Game_Renderer);
 					break;
 				}
 				if (s.length() <= 96 && s.length()>=24) {
@@ -538,7 +562,7 @@ void GameRun(SDL_Event game_event, int playernum, TTF_Font* game_font, map<strin
 				message = &str_obj[0];
 				send(sock, message, strlen(message), 0);
 			}
-			
+			if (isDone) Mix_PlayChannel(-1, deaths, 0);
 			SDL_RenderClear(Game_Renderer);
 			break;
 		}
@@ -655,6 +679,15 @@ void Initialise() {
 	if (Game_Renderer == NULL) {
 		cout << "HEY< ERROR" << endl;
 	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+
+
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
 	Texture::Renderer = Game_Renderer;
 }
 
@@ -834,6 +867,15 @@ int main(int argc, char* argv[]) {
 	
 	Initialise();
 
+	opens = Mix_LoadWAV("resources/sounds/opens.wav");
+	Mix_Chunk* mainop = Mix_LoadWAV("resources/sounds/mainop.wav");
+	deaths = Mix_LoadWAV("resources/sounds/deaths.wav");
+	meowths = Mix_LoadWAV("resources/sounds/meowths.wav");
+
+	Mix_PlayChannel(-1, mainop, 0);
+
+	
+
 
 	Element::Element_Matrix = &Game_Matrix;
 	
@@ -905,11 +947,12 @@ int main(int argc, char* argv[]) {
 	}
 	
 
-
+	
 
 	LoadImagesinBulk();
 
 	Wait(&game_event, ShowImages[7]);
+	
 
 	bool run = true;
 	bool ash = true;
@@ -960,7 +1003,7 @@ int main(int argc, char* argv[]) {
 	
 	while (l--) {
 
-
+		
 		NameAndIntro(game_event, playernum, game_font, TextureHash, ShowImages);
 
 		if (ONLINE) {

@@ -24,7 +24,6 @@ enum Direction {
 class Ash : public Element {
 public:
 
-    Mix_Chunk* ankita = NULL;
     Mix_Chunk* SquirtleSound = NULL;
     Mix_Chunk* JigglyPuffSound = NULL;
     Mix_Chunk* GastlySound = NULL;
