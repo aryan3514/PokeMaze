@@ -106,7 +106,7 @@ SDL2_mixer.lib
     ![image](https://user-images.githubusercontent.com/78603679/124807090-099a2300-df7b-11eb-9bc3-e92c73bd8da8.png)
     
     
-22) Copy all the files in **sdl dll files** folder, and paste them in that Debug folder.
+22) Copy all the files in **sdl_all->sdl dll files** folder, and paste them in that Debug folder.
 
 (Note that if your project's name is "GameProject" then there will be two debug folders present :
      1) **GameProject->Debug**
